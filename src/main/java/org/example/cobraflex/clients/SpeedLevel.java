@@ -6,10 +6,10 @@ public enum SpeedLevel {
   LEVEL_THREE,
   LEVEL_FOUR;
 
-  public double getSpeed() {
+  public int getSpeed() {
     switch (this) {
       case LEVEL_ONE -> {
-        return 200;
+        return 300;
       }
       case LEVEL_TWO -> {
         return 600;
@@ -21,7 +21,7 @@ public enum SpeedLevel {
         return 1800;
       }
     }
-    return 0;
+    return LEVEL_ONE.getSpeed();
   }
 
 }

@@ -273,16 +273,13 @@ public class RcController {
   }
 
   private void repeat_chassis_cmd(MovingDirection direction) {
-    if (chassisTimer != null) {
-      chassisTimer.cancel();
-    }
     chassisTimer = new Timer();
     chassisTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
         cobra.cmd_speed_control(direction);
       }
-    }, 0, 2900);
+    }, 0, 1500);
   }
 
   @FXML

@@ -31,24 +31,21 @@ import org.apache.hc.core5.util.Timeout;
 public class ESP32S3Client {
 
   private final String host;
-  private double speedR;
-  private double speedL;
+  private int speed;
   private int actPan;
   private int actTilt;
   private boolean panTiltLed;
 
   public ESP32S3Client(String host) {
     this.host = host;
-    this.speedR = SpeedLevel.LEVEL_ONE.getSpeed();
-    this.speedL = SpeedLevel.LEVEL_ONE.getSpeed();
+    this.speed = SpeedLevel.LEVEL_ONE.getSpeed();
     this.actPan = 0;
     this.actTilt = 0;
     this.panTiltLed = false;
   }
 
   public void setSpeed(SpeedLevel level) {
-    this.speedR = level.getSpeed();
-    this.speedL = level.getSpeed();
+    this.speed = level.getSpeed();
   }
 
   /*
@@ -83,47 +80,62 @@ public class ESP32S3Client {
    *  - L, R: speed of the wheel, value range 0.5 - -0.5
    */
   public void cmd_speed_control(MovingDirection direction) {
-    double left = 0;
-    double right = 0;
+    int leftF = 0;
+    int rightF = 0;
+    int leftR = 0;
+    int rightR = 0;
     switch (direction) {
       case NORTH -> {
-        left = speedL;
-        right = speedR;
+        leftF = speed;
+        rightF = speed;
+        leftR = speed;
+        rightR = speed;
       }
       case NORTHEAST -> {
-        left = speedL;
-        right = speedR * 0.5;
+        leftF = speed;
+        rightF = SpeedLevel.LEVEL_ONE.getSpeed();
+        leftR = speed;
+        rightR = SpeedLevel.LEVEL_ONE.getSpeed();
       }
       case EAST -> {
-        left = speedL;
-        right = -speedR;
+        leftF = speed;
+        rightF = -speed / 2;
+        leftR = speed / 2;
+        rightR = -speed;
       }
       case SOUTHEAST -> {
-        left = -speedL;
-        right = -speedR * 0.5;
+        leftF = -speed;
+        rightF = -speed / 2;
+        leftR = -speed;
+        rightR = -speed / 2;
       }
       case SOUTH -> {
-        left = -speedL;
-        right = -speedR;
+        leftF = -speed;
+        rightF = -speed;
+        leftR = -speed;
+        rightR = -speed;
       }
       case SOUTHWEST -> {
-        left = -speedL * 0.5;
-        right = -speedR;
+        leftF = speed / 2;
+        rightF = -speed;
+        leftR = -speed / 2;
+        rightR = -speed;
       }
       case WEST -> {
-        left = -speedL;
-        right = speedR;
+        leftF = speed;
+        rightF = speed / 2;
+        leftR = -speed / 2;
+        rightR = -speed;
       }
       case NORTHWEST -> {
-        left = speedL * 0.5;
-        right = speedR;
+        leftF = speed / 2;
+        rightF = speed;
+        leftR = speed / 2;
+        rightR = speed;
       }
-      case STOP -> {
-        left = 0;
-        right = 0;
-      }
+      case STOP -> {}
     }
-    String cmd = "{\"T\":1,\"L\":" + left + ",\"R\":" + right + "}";
+    String cmd = "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":" + leftR + "}";
     get(cmd);
   }
 

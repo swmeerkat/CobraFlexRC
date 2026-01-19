@@ -18,11 +18,11 @@
   <HBox styleClass="parameter-row">
     <VBox styleClass="parameter">
       <TextField fx:id="bf_odl" editable="false"/>
-      <Label text="ROLL"/>
+      <Label text="ODL"/>
     </VBox>
     <VBox styleClass="parameter">
       <TextField fx:id="bf_odr" editable="false"/>
-      <Label text="PITCH"/>
+      <Label text="ODR"/>
     </VBox>
     <VBox styleClass="parameter">
       <TextField fx:id="bf_voltage" editable="false"/>
