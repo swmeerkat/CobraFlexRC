@@ -99,8 +99,8 @@ public class ESP32S3Client {
       }
       case EAST -> {
         leftF = speed;
-        rightF = -speed / 2;
-        leftR = speed / 2;
+        rightF = -speed;
+        leftR = speed;
         rightR = -speed;
       }
       case SOUTHEAST -> {
@@ -122,10 +122,10 @@ public class ESP32S3Client {
         rightR = -speed;
       }
       case WEST -> {
-        leftF = speed;
-        rightF = speed / 2;
-        leftR = -speed / 2;
-        rightR = -speed;
+        leftF = -speed;
+        rightF = speed;
+        leftR = -speed;
+        rightR = speed;
       }
       case NORTHWEST -> {
         leftF = speed / 2;
