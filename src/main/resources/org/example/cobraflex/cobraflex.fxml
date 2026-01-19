@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml"
+  fx:controller="org.example.cobraflex.RcController"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://javafx.com/fxml ">
+  <stylesheets>
+    <URL value="@cobraflex.css"/>
+  </stylesheets>
+
+  <HBox styleClass="parameter-row">
+    <VBox styleClass="parameter">
+      <TextField fx:id="bf_odl" editable="false"/>
+      <Label text="ODL"/>
+    </VBox>
+    <VBox styleClass="parameter">
+      <TextField fx:id="bf_odr" editable="false"/>
+      <Label text="ODR"/>
+    </VBox>
+    <VBox styleClass="parameter">
+      <TextField fx:id="bf_voltage" editable="false"/>
+      <Label text="Voltage"/>
+    </VBox>
+  </HBox>
+
+  <HBox styleClass="button-grid-section">
+    <VBox>
+      <GridPane styleClass="button-grid">
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="0" text="&#x2B09;"
+          onMousePressed="#gul_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="1" GridPane.rowIndex="0" text="&#x2B06;"
+          onMousePressed="#gum_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="0" text="&#x2B08;"
+          onMousePressed="#gur_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="1" text="&#x2B05;"
+          onMousePressed="#gml_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="1" GridPane.rowIndex="1" text="&#x0e4f;"
+          onMousePressed="#gmm_pressed"/>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="1" text="&#x2B95;"
+          onMousePressed="#gmr_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="2" text="&#x2B0B;"
+          onMousePressed="#gbl_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="1" GridPane.rowIndex="2" text="&#x2B07;"
+          onMousePressed="#gbm_pressed" onMouseReleased="#gimbal_released"/>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="2" text="&#x2B0A;"
+          onMousePressed="#gbr_pressed" onMouseReleased="#gimbal_released"/>
+      </GridPane>
+      <TextField editable="false" text="Gimbal"/>
+    </VBox>
+    <VBox>
+      <GridPane styleClass="button-grid">
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="0" text="&#x2B09;"
+          onMousePressed="#cul_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="1" GridPane.rowIndex="0" text="&#x2B06;"
+          onMousePressed="#cum_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="0" text="&#x2B08;"
+          onMousePressed="#cur_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="1" text="&#x2B05;"
+          onMousePressed="#cml_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="1" GridPane.rowIndex="1" text="&#x23f9;"
+          onMousePressed="#cmm_pressed"/>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="1" text="&#x2B95;"
+          onMousePressed="#cmr_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="2" text="&#x2B0B;"
+          onMousePressed="#cbl_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="1" GridPane.rowIndex="2" text="&#x2B07;"
+          onMousePressed="#cbm_pressed" onMouseReleased="#chassis_released"/>
+        <Button GridPane.columnIndex="2" GridPane.rowIndex="2" text="&#x2B0A;"
+          onMousePressed="#cbr_pressed" onMouseReleased="#chassis_released"/>
+      </GridPane>
+      <TextField editable="false" text="Chassis"/>
+    </VBox>
+    <VBox maxWidth="70">
+      <fx:define>
+        <ToggleGroup fx:id="speed"/>
+      </fx:define>
+      <RadioButton toggleGroup="$speed" onAction="#radio_button4">4</RadioButton>
+      <RadioButton toggleGroup="$speed" onAction="#radio_button3">3</RadioButton>
+      <RadioButton toggleGroup="$speed" onAction="#radio_button2">2</RadioButton>
+      <RadioButton toggleGroup="$speed" onAction="#radio_button1" selected="true">1</RadioButton>
+      <TextField editable="false" text="Speed"/>
+    </VBox>
+  </HBox>
+
+  <TextArea fx:id="console" editable="false" VBox.vgrow="ALWAYS"/>
+
+  <HBox styleClass="button-row">
+    <Button text="IMU data" onAction="#getImuData"/>
+    <Button text="Keyboard control" onAction="#enterKeyboardControl"
+      onKeyPressed="#keyPressed" onKeyReleased="#keyReleased"/>
+  </HBox>
+
+</VBox>

@@ -1,0 +1,97 @@
+.root {
+  -fx-font-size: 14px;
+  -fx-font-family: sans-serif;
+  -fx-background-color: #777777;
+}
+
+TextField {
+  -fx-alignment: center;
+  -fx-text-alignment: center;
+  -fx-text-origin: bottom;
+}
+
+.panel {
+  -fx-spacing: 10;
+  -fx-padding: 30 10 20 10;
+}
+
+.parameter-row {
+  -fx-spacing: 13;
+  -fx-alignment: bottom-center;
+}
+
+.parameter {
+  -fx-max-width: 100;
+  -fx-alignment: bottom-center;
+  -fx-background-color: #DDDDDD;
+}
+
+.parameter .content {
+  -fx-background-color: #EEEEEE;
+}
+
+.button-grid-section {
+  -fx-alignment: center;
+  -fx-padding: 0 0 10 0;
+}
+
+.button-grid-section VBox {
+  -fx-alignment: bottom-center
+ }
+
+.button-grid-section TextField {
+  -fx-background-color: #777777;
+  -fx-text-fill: white;
+}
+
+.button-grid-section RadioButton {
+  -fx-padding: 0 0 15 10;
+  -fx-text-fill: white;
+}
+
+.button-grid {
+  -fx-background-radius: 5.0;
+  -fx-padding: 20 20 10 20;
+  -fx-hgap: 8;
+  -fx-vgap: 8;
+}
+
+.button-grid .button {
+  -fx-pref-width: 50;
+  -fx-padding: 10;
+  -fx-background-color: #22bbff;
+  -fx-font-family: sans-serif;
+  -fx-font-size: 24;
+}
+.button-grid .button:pressed {
+  -fx-background-color: #44ddff;
+}
+
+.button-row {
+  -fx-spacing: 10;
+  -fx-alignment: bottom-center;
+  -fx-padding: 10 10 10 10;
+}
+
+.button-row button {
+  -fx-background-color: #DDDDDD;
+}
+
+.button-row .button:focused {
+  -fx-background-color: #22bbff;
+}
+
+.button-row .button:pressed {
+  -fx-background-color: #44ddff;
+}
+
+#console {
+  -fx-min-height: 300;
+  -fx-min-width: 600;
+  -fx-background-color: #EEEEEE;
+  -fx-text-fill: green;
+}
+
+#console .content {
+ -fx-background-color: #EEEEEE;
+}
