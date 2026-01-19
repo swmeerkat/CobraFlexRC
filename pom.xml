@@ -15,7 +15,7 @@
     <junit.version>6.0.0</junit.version>
     <lombok.version>1.18.42</lombok.version>
     <javafx.version>25.0.1</javafx.version>
-    <httpclient.version>5.6</httpclient.version>
+    <httpclient.version>5.4.4</httpclient.version>
     <jinput.version>2.0.10</jinput.version>
     <slf4j.version>2.0.17</slf4j.version>
   </properties>

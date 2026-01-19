@@ -10,10 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml"
-  fx:controller="org.example.cobraflex.RcController"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://javafx.com/fxml ">
+<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.cobraflex.RcController">
   <stylesheets>
     <URL value="@cobraflex.css"/>
   </stylesheets>
@@ -21,11 +18,11 @@
   <HBox styleClass="parameter-row">
     <VBox styleClass="parameter">
       <TextField fx:id="bf_odl" editable="false"/>
-      <Label text="ODL"/>
+      <Label text="ROLL"/>
     </VBox>
     <VBox styleClass="parameter">
       <TextField fx:id="bf_odr" editable="false"/>
-      <Label text="ODR"/>
+      <Label text="PITCH"/>
     </VBox>
     <VBox styleClass="parameter">
       <TextField fx:id="bf_voltage" editable="false"/>
@@ -82,7 +79,7 @@
     </VBox>
     <VBox maxWidth="70">
       <fx:define>
-        <ToggleGroup fx:id="speed"/>
+        <ToggleGroup fx:id="speed" />
       </fx:define>
       <RadioButton toggleGroup="$speed" onAction="#radio_button4">4</RadioButton>
       <RadioButton toggleGroup="$speed" onAction="#radio_button3">3</RadioButton>

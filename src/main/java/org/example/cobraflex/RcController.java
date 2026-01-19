@@ -24,13 +24,13 @@ import org.example.cobraflex.clients.SpeedLevel;
 public class RcController {
 
   @FXML
-  protected TextField bf_odl;
+  private TextField bf_odl;
   @FXML
-  protected TextField bf_odr;
+  private TextField bf_odr;
   @FXML
-  protected TextField bf_voltage;
+  private TextField bf_voltage;
   @FXML
-  protected TextArea console;
+  private TextArea console;
 
   @Setter
   private Stage stage;
@@ -220,8 +220,7 @@ public class RcController {
 
   private ESP32S3Client initCobraClient(String host) {
     ESP32S3Client cobra = new ESP32S3Client(host);
-    log.info("Init gimbal: cmd_gimbal_ctrl_simple(0, 0)");
-    cobra.cmd_gimbal_ctrl_simple(0, 0);
+    //cobra.cmd_gimbal_ctrl_simple(0, 0);
     return cobra;
   }
 
