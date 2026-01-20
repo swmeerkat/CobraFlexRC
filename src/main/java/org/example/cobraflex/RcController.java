@@ -270,21 +270,25 @@ public class RcController {
   @FXML
   private void gimbal_released() {
     gimbalTimer.cancel();
+    cobra.cmd_gimbal_ctrl_stop();
   }
 
   private void repeat_chassis_cmd(MovingDirection direction) {
+    if (chassisTimer != null) {
+      chassisTimer.cancel();
+    }
     chassisTimer = new Timer();
     chassisTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
         cobra.cmd_speed_control(direction);
       }
-    }, 0, 1500);
+    }, 0, 1000);
   }
 
   @FXML
   private void chassis_released() {
-    cobra.cmd_speed_control(MovingDirection.STOP);
     chassisTimer.cancel();
+    cobra.cmd_speed_control(MovingDirection.STOP);
   }
 }
