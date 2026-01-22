@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -26,8 +27,10 @@ public class JetsonOrinNanoClient {
 
   private final String host;
 
-  public JetsonOrinNanoClient(String host) {
-    this.host = host;
+  public JetsonOrinNanoClient() {
+    Properties properties = loadProperties();
+    this.host = properties.get("Jetson.host").toString();
+    log.info("Jetson.host: {}", this.host);
   }
 
   public JsonNode get(String path) throws RuntimeException {
@@ -125,5 +128,19 @@ public class JetsonOrinNanoClient {
       connManager = null;
     }
     return connManager;
+  }
+
+  private Properties loadProperties() {
+    Properties properties = new Properties();
+    InputStream stream =
+        Thread.currentThread().getContextClassLoader()
+            .getResourceAsStream("application.properties");
+    try {
+      properties.load(stream);
+    } catch (IOException e) {
+      log.error(e.getMessage());
+      throw new RuntimeException(e);
+    }
+    return properties;
   }
 }

@@ -1,10 +1,7 @@
 package org.example.cobraflex;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
@@ -15,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.example.cobraflex.clients.CobraFlexClient;
 import org.example.cobraflex.clients.ESP32S3Client;
 import org.example.cobraflex.clients.JetsonOrinNanoClient;
 import org.example.cobraflex.clients.MovingDirection;
@@ -34,27 +32,23 @@ public class UiController {
 
   @Setter
   private Stage stage;
-  private ESP32S3Client cobra;
+  private ESP32S3Client esp32;
   private JetsonOrinNanoClient jetson;
+  private CobraFlexClient cobraflex;
   private KeyboardController keyboardController;
   private Timer gimbalTimer = null;
   private Timer chassisTimer = null;
 
   @FXML
   private void initialize() {
-    Properties properties = loadProperties();
-    String cobra_host = properties.get("COBRA.host").toString();
-    log.info("cobra host: {}", cobra_host);
-    cobra = initCobraClient(cobra_host);
-    String jetson_host = properties.get("Jetson.host").toString();
-    log.info("jetson host: {}", jetson_host);
-    jetson = new JetsonOrinNanoClient(jetson_host);
-    keyboardController = new KeyboardController(cobra);
+    this.esp32 = new ESP32S3Client();
+    this.cobraflex = new CobraFlexClient();
+    keyboardController = new KeyboardController(esp32, cobraflex);
     Timer feedbackTimer = new Timer();
     feedbackTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        getBaseFeedback();
+        getFeedback();
       }
     }, 0, 10000);
     Platform.runLater(() -> stage.setOnCloseRequest(_ -> feedbackTimer.cancel()));
@@ -62,17 +56,13 @@ public class UiController {
   }
 
   @FXML
-  private void getBaseFeedback() {
-    JsonNode result = cobra.cmd_base_feedback();
+  private void getFeedback() {
+    String cmd = cobraflex.cmd_feedback();
+    JsonNode result = esp32.get(cmd);
     bf_odl.setText(getParamValue("odl", result));
     bf_odr.setText(getParamValue("odr", result));
     bf_voltage.setText(roundParamValue("v", result));
-  }
-
-  @FXML
-  private void getImuData() {
-    JsonNode result = cobra.get_IMU_data();
-    console.appendText(result.toPrettyString() + "\n");
+    console.appendText(result.toString() + "\n");
   }
 
   // gimbal upper left button
@@ -102,7 +92,8 @@ public class UiController {
   // gimbal middle middle button
   @FXML
   private void gmm_pressed() {
-    cobra.cmd_gimbal_ctrl_simple(0, 0);
+    String cmd = cobraflex.cmd_gimbal_ctrl_simple(0, 0);
+    esp32.get(cmd);
   }
 
   // gimbal middle right button
@@ -156,7 +147,8 @@ public class UiController {
   // chassis middle middle button
   @FXML
   private void cmm_pressed() {
-    cobra.cmd_speed_control(MovingDirection.STOP);
+    String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
+    esp32.get(cmd);
   }
 
   // chassis middle right button
@@ -185,22 +177,22 @@ public class UiController {
 
   @FXML
   private void radio_button4() {
-    cobra.setSpeed(SpeedLevel.LEVEL_FOUR);
+    cobraflex.setSpeed(SpeedLevel.LEVEL_FOUR);
   }
 
   @FXML
   private void radio_button3() {
-    cobra.setSpeed(SpeedLevel.LEVEL_THREE);
+    cobraflex.setSpeed(SpeedLevel.LEVEL_THREE);
   }
 
   @FXML
   private void radio_button2() {
-    cobra.setSpeed(SpeedLevel.LEVEL_TWO);
+    cobraflex.setSpeed(SpeedLevel.LEVEL_TWO);
   }
 
   @FXML
   private void radio_button1() {
-    cobra.setSpeed(SpeedLevel.LEVEL_ONE);
+    cobraflex.setSpeed(SpeedLevel.LEVEL_ONE);
   }
 
   @FXML
@@ -216,26 +208,6 @@ public class UiController {
   @FXML
   protected void enterKeyboardControl() {
     // focus on button is sufficient
-  }
-
-  private ESP32S3Client initCobraClient(String host) {
-    ESP32S3Client cobra = new ESP32S3Client(host);
-    //cobra.cmd_gimbal_ctrl_simple(0, 0);
-    return cobra;
-  }
-
-  private Properties loadProperties() {
-    Properties properties = new Properties();
-    InputStream stream =
-        Thread.currentThread().getContextClassLoader()
-            .getResourceAsStream("application.properties");
-    try {
-      properties.load(stream);
-    } catch (IOException e) {
-      log.error(e.getMessage());
-      throw new RuntimeException(e);
-    }
-    return properties;
   }
 
   private String getParamValue(String parameter, JsonNode result) {
@@ -262,7 +234,8 @@ public class UiController {
     gimbalTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        cobra.gimbal_step(delta_pan, delta_tilt);
+        String cmd = cobraflex.gimbal_step(delta_pan, delta_tilt);
+        esp32.get(cmd);
       }
     }, 0, 50);
   }
@@ -270,7 +243,8 @@ public class UiController {
   @FXML
   private void gimbal_released() {
     gimbalTimer.cancel();
-    cobra.cmd_gimbal_ctrl_stop();
+    String cmd = cobraflex.cmd_gimbal_ctrl_stop();
+    esp32.get(cmd);
   }
 
   private void repeat_chassis_cmd(MovingDirection direction) {
@@ -281,7 +255,8 @@ public class UiController {
     chassisTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        cobra.cmd_speed_control(direction);
+        String cmd = cobraflex.cmd_speed_control(direction);
+        esp32.get(cmd);
       }
     }, 0, 1000);
   }
@@ -289,6 +264,7 @@ public class UiController {
   @FXML
   private void chassis_released() {
     chassisTimer.cancel();
-    cobra.cmd_speed_control(MovingDirection.STOP);
+    String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
+    esp32.get(cmd);
   }
 }

@@ -1,0 +1,171 @@
+package org.example.cobraflex.clients;
+
+/*
+ * References:
+ *  - https://www.waveshare.com/wiki/ESP32-S3-DEV-KIT-N8R8
+ *  - https://www.waveshare.com/wiki/Cobra_Flex
+ *  - https://www.waveshare.com/wiki/2-Axis_Pan-Tilt_Camera_Module
+ */
+public class CobraFlexClient {
+  private int speed;
+  private int actPan;
+  private int actTilt;
+  private boolean panTiltLed;
+
+  public CobraFlexClient() {
+    this.speed = SpeedLevel.LEVEL_ONE.getSpeed();
+    this.actPan = 0;
+    this.actTilt = 0;
+    this.panTiltLed = false;
+  }
+
+  public void setSpeed(SpeedLevel level) {
+    this.speed = level.getSpeed();
+  }
+
+  /*
+   * CMD_FEEDBACK
+   * * Output:
+   *  - M1: speed of the left front wheel
+   *  - M2: speed of the right front wheel
+   *  - M3: speed of the left rear wheel
+   *  - M4: speed of the right rear wheel
+   *  - odl: mileage of the left wheel in cm after last start of the chassis
+   *  - odr: mileage of the right wheel in cm after the last start of the chassis
+   *  - v: voltage in mV
+   */
+  public String cmd_feedback() {
+    return  "{\"T\":130}";
+  }
+
+  /*
+   * CMD_SPEED_CTRL
+   * Input:
+   *  - L, R: speed of the wheel, value range 0.5 - -0.5
+   */
+  public String cmd_speed_control(MovingDirection direction) {
+    int leftF = 0;
+    int rightF = 0;
+    int leftR = 0;
+    int rightR = 0;
+    switch (direction) {
+      case NORTH -> {
+        leftF = speed;
+        rightF = speed;
+        leftR = speed;
+        rightR = speed;
+      }
+      case NORTHEAST -> {
+        leftF = speed;
+        rightF = SpeedLevel.LEVEL_ONE.getSpeed();
+        leftR = speed;
+        rightR = SpeedLevel.LEVEL_ONE.getSpeed();
+      }
+      case EAST -> {
+        leftF = speed;
+        rightF = -speed;
+        leftR = speed;
+        rightR = -speed;
+      }
+      case SOUTHEAST -> {
+        leftF = -speed;
+        rightF = -speed / 2;
+        leftR = -speed;
+        rightR = -speed / 2;
+      }
+      case SOUTH -> {
+        leftF = -speed;
+        rightF = -speed;
+        leftR = -speed;
+        rightR = -speed;
+      }
+      case SOUTHWEST -> {
+        leftF = speed / 2;
+        rightF = -speed;
+        leftR = -speed / 2;
+        rightR = -speed;
+      }
+      case WEST -> {
+        leftF = -speed;
+        rightF = speed;
+        leftR = -speed;
+        rightR = speed;
+      }
+      case NORTHWEST -> {
+        leftF = speed / 2;
+        rightF = speed;
+        leftR = speed / 2;
+        rightR = speed;
+      }
+      case STOP -> {}
+    }
+    return "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":" + leftR + "}";
+  }
+
+  /*
+   * CMD_GIMBAL_CTRL_SIMPLE
+   * Input:
+   *  - X: PAN, value range -180 to 180
+   *  - Y: Tilt, value range -30 to 90
+   *  - SPD: Speed, 0 means fastest
+   *  - ACC: Acceleration, 0 means fastest
+   */
+  public String cmd_gimbal_ctrl_simple(int pan, int tilt) {
+    String cmd = "{\"T\":133,\"X\":" + pan + ",\"Y\":" + tilt + ",\"SPD\":0,\"ACC\":0} ";
+    actPan = pan;
+    actTilt = tilt;
+    return cmd;
+  }
+
+  /*
+   * CMD_GIMBAL_CTRL_STOPE
+   * Stops the pan-tilt movement at any time
+   */
+  public String cmd_gimbal_ctrl_stop() {
+    return  "{\"T\":135} ";
+  }
+
+  /*
+   * delta_pan: -1 -> step left, 0 -> none, 1 -> step right
+   * delta_tilt: -1 -> step down, 0 -> none, 1 -> step up
+   */
+  public String gimbal_step(int delta_pan, int delta_tilt) {
+    int new_pan = actPan;
+    int new_tilt = actTilt;
+    if (delta_pan < 0) {
+      if (actPan > -180) {
+        new_pan = actPan - 2;
+      }
+    } else if (delta_pan > 0) {
+      if (actPan < 180) {
+        new_pan = actPan + 2;
+      }
+    }
+    if (delta_tilt < 0) {
+      if (actTilt > -30) {
+        new_tilt = actTilt - 2;
+      }
+    } else if (delta_tilt > 0) {
+      if (actTilt < 90) {
+        new_tilt = actTilt + 2;
+      }
+    }
+    return cmd_gimbal_ctrl_simple(new_pan, new_tilt);
+  }
+
+  /*
+   *  CMD_LED_CTRL
+   *  IO5 controls pan-tilt LED
+   */
+  public String turn_pan_tilt_led() {
+    int brightness;
+    if (!panTiltLed) {
+      panTiltLed = true;
+      brightness = 255;
+    } else {
+      panTiltLed = false;
+      brightness = 0;
+    }
+    return "{\"T\":132, \"IO4\":0,\"IO5\":" + brightness + "}";
+  }
+}

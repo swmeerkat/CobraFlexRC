@@ -92,7 +92,8 @@
   <TextArea fx:id="console" editable="false" VBox.vgrow="ALWAYS"/>
 
   <HBox styleClass="button-row">
-    <Button text="IMU data" onAction="#getImuData"/>
+    <Button text="Feedback" onAction="#getFeedback"
+      onKeyPressed="#keyPressed" onKeyReleased="#keyReleased"/>
     <Button text="Keyboard control" onAction="#enterKeyboardControl"
       onKeyPressed="#keyPressed" onKeyReleased="#keyReleased"/>
   </HBox>
