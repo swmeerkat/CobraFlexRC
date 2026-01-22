@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.cobraflex.UiController">
+<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml"
+  fx:controller="org.example.cobraflex.UiController">
   <stylesheets>
     <URL value="@cobraflex.css"/>
   </stylesheets>
@@ -79,7 +80,7 @@
     </VBox>
     <VBox maxWidth="70">
       <fx:define>
-        <ToggleGroup fx:id="speed" />
+        <ToggleGroup fx:id="speed"/>
       </fx:define>
       <RadioButton toggleGroup="$speed" onAction="#radio_button4">4</RadioButton>
       <RadioButton toggleGroup="$speed" onAction="#radio_button3">3</RadioButton>
@@ -92,10 +93,10 @@
   <TextArea fx:id="console" editable="false" VBox.vgrow="ALWAYS"/>
 
   <HBox styleClass="button-row">
-    <Button text="Feedback" onAction="#getFeedback"
-      onKeyPressed="#keyPressed" onKeyReleased="#keyReleased"/>
-    <Button text="Keyboard control" onAction="#enterKeyboardControl"
-      onKeyPressed="#keyPressed" onKeyReleased="#keyReleased"/>
+    <Button text="Feedback" onAction="#getFeedback" onKeyPressed="#keyPressed"
+      onKeyReleased="#keyReleased"/>
+    <Button text="Keyboard control" onAction="#enterKeyboardControl" onKeyPressed="#keyPressed"
+      onKeyReleased="#keyReleased"/>
   </HBox>
 
 </VBox>
