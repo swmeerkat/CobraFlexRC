@@ -21,7 +21,7 @@ import org.example.cobraflex.clients.MovingDirection;
 import org.example.cobraflex.clients.SpeedLevel;
 
 @Slf4j
-public class RcController {
+public class UiController {
 
   @FXML
   private TextField bf_odl;

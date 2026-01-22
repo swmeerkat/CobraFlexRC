@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.cobraflex.RcController">
+<VBox styleClass="panel" xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.cobraflex.UiController">
   <stylesheets>
     <URL value="@cobraflex.css"/>
   </stylesheets>
