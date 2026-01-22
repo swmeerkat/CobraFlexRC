@@ -7,6 +7,7 @@ package org.example.cobraflex.clients;
  *  - https://www.waveshare.com/wiki/2-Axis_Pan-Tilt_Camera_Module
  */
 public class CobraFlexClient {
+
   private int speed;
   private int actPan;
   private int actTilt;
@@ -35,7 +36,7 @@ public class CobraFlexClient {
    *  - v: voltage in mV
    */
   public String cmd_feedback() {
-    return  "{\"T\":130}";
+    return "{\"T\":130}";
   }
 
   /*
@@ -97,9 +98,11 @@ public class CobraFlexClient {
         leftR = speed / 2;
         rightR = speed;
       }
-      case STOP -> {}
+      case STOP -> {
+      }
     }
-    return "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":" + leftR + "}";
+    return "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":"
+        + leftR + "}";
   }
 
   /*
@@ -122,7 +125,7 @@ public class CobraFlexClient {
    * Stops the pan-tilt movement at any time
    */
   public String cmd_gimbal_ctrl_stop() {
-    return  "{\"T\":135} ";
+    return "{\"T\":135} ";
   }
 
   /*

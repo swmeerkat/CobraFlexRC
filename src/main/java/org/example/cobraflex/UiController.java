@@ -13,13 +13,15 @@ import javafx.stage.Stage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cobraflex.clients.CobraFlexClient;
-import org.example.cobraflex.clients.ESP32S3Client;
 import org.example.cobraflex.clients.JetsonOrinNanoClient;
 import org.example.cobraflex.clients.MovingDirection;
 import org.example.cobraflex.clients.SpeedLevel;
 
 @Slf4j
 public class UiController {
+
+  private static final String FEEDBACK_PATH = "/cobraflex/feedback";
+  private static final String CMD_PATH = "/cobraflex/cmd";
 
   @FXML
   public TextField bf_odl;
@@ -32,17 +34,17 @@ public class UiController {
 
   @Setter
   private Stage stage;
-  private ESP32S3Client esp32;
   private CobraFlexClient cobraflex;
+  private JetsonOrinNanoClient jetson;
   private KeyboardController keyboardController;
   private Timer gimbalTimer = null;
   private Timer chassisTimer = null;
 
   @FXML
   public void initialize() {
-    this.esp32 = new ESP32S3Client();
     this.cobraflex = new CobraFlexClient();
-    keyboardController = new KeyboardController(esp32, cobraflex);
+    this.jetson = new JetsonOrinNanoClient();
+    keyboardController = new KeyboardController(jetson, cobraflex);
     Timer feedbackTimer = new Timer();
     feedbackTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
@@ -56,8 +58,7 @@ public class UiController {
 
   @FXML
   public void getFeedback() {
-    String cmd = cobraflex.cmd_feedback();
-    JsonNode result = esp32.get(cmd);
+    JsonNode result = jetson.get(FEEDBACK_PATH);
     bf_odl.setText(getParamValue("odl", result));
     bf_odr.setText(getParamValue("odr", result));
     bf_voltage.setText(roundParamValue("v", result));
@@ -92,7 +93,7 @@ public class UiController {
   @FXML
   public void gmm_pressed() {
     String cmd = cobraflex.cmd_gimbal_ctrl_simple(0, 0);
-    esp32.get(cmd);
+    jetson.post(CMD_PATH, cmd);
   }
 
   // gimbal middle right button
@@ -147,7 +148,7 @@ public class UiController {
   @FXML
   public void cmm_pressed() {
     String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
-    esp32.get(cmd);
+    jetson.post(CMD_PATH, cmd);
   }
 
   // chassis middle right button
@@ -234,7 +235,7 @@ public class UiController {
       @Override
       public void run() {
         String cmd = cobraflex.gimbal_step(delta_pan, delta_tilt);
-        esp32.get(cmd);
+        jetson.post(CMD_PATH, cmd);
       }
     }, 0, 50);
   }
@@ -243,7 +244,7 @@ public class UiController {
   public void gimbal_released() {
     gimbalTimer.cancel();
     String cmd = cobraflex.cmd_gimbal_ctrl_stop();
-    esp32.get(cmd);
+    jetson.post(CMD_PATH, cmd);
   }
 
   private void repeat_chassis_cmd(MovingDirection direction) {
@@ -255,7 +256,7 @@ public class UiController {
       @Override
       public void run() {
         String cmd = cobraflex.cmd_speed_control(direction);
-        esp32.get(cmd);
+        jetson.post(CMD_PATH, cmd);
       }
     }, 0, 1000);
   }
@@ -264,6 +265,6 @@ public class UiController {
   public void chassis_released() {
     chassisTimer.cancel();
     String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
-    esp32.get(cmd);
+    jetson.post(CMD_PATH, cmd);
   }
 }

@@ -87,6 +87,10 @@ public class ESP32S3Client {
     return responseData;
   }
 
+  public  JsonNode post(String ignoredPath, String cmd) throws RuntimeException {
+    return get(cmd);
+  }
+
   private Properties loadProperties() {
     Properties properties = new Properties();
     InputStream stream =

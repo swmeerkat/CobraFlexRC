@@ -73,10 +73,10 @@ public class JetsonOrinNanoClient {
     return responseData;
   }
 
-  public JsonNode post(String path, String cmd) throws RuntimeException {
+  public void post(String path, String cmd) throws RuntimeException {
     JsonFactory jsonFactory = new JsonFactory();
     ObjectMapper objectMapper = new ObjectMapper(jsonFactory);
-    JsonNode responseData = JsonNodeFactory.instance.objectNode();
+    JsonNode responseData;
     PoolingHttpClientConnectionManager connManager = getConnManager();
     if (connManager != null) {
       try (CloseableHttpClient client = HttpClients.custom()
@@ -87,7 +87,7 @@ public class JetsonOrinNanoClient {
             .setPath(path)
             .setEntity(new StringEntity(cmd))
             .build();
-        log.info("Post: {}", path);
+        log.info("Post: {} {}", path, cmd);
         responseData = client.execute(httpPost, response -> {
           if (response.getCode() >= 300) {
             log.error(new StatusLine(response).toString());
@@ -111,7 +111,6 @@ public class JetsonOrinNanoClient {
         log.error("Post client error: {}", e.getMessage());
       }
     }
-    return responseData;
   }
 
   PoolingHttpClientConnectionManager getConnManager() {
