@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -19,15 +20,15 @@
   <HBox styleClass="parameter-row">
     <VBox styleClass="parameter">
       <TextField fx:id="bf_odl" editable="false"/>
-      <Label text="ODL"/>
+      <Label styleClass="parameter-label" text="ODL"/>
     </VBox>
     <VBox styleClass="parameter">
       <TextField fx:id="bf_odr" editable="false"/>
-      <Label text="ODR"/>
+      <Label styleClass="parameter-label" text="ODR"/>
     </VBox>
     <VBox styleClass="parameter">
       <TextField fx:id="bf_voltage" editable="false"/>
-      <Label text="Voltage"/>
+      <Label styleClass="parameter-label" text="Voltage"/>
     </VBox>
   </HBox>
 
@@ -53,40 +54,55 @@
         <Button GridPane.columnIndex="2" GridPane.rowIndex="2" text="&#x2B0A;"
           onMousePressed="#gbr_pressed" onMouseReleased="#gimbal_released"/>
       </GridPane>
-      <TextField editable="false" text="Gimbal"/>
+      <HBox styleClass="light-slider">
+        <Label styleClass="slider-label" text="Light"/>
+        <Slider fx:id="gimbal_light" orientation="HORIZONTAL" maxWidth="130"
+          min="0" max="255" value="0"/>
+      </HBox>
+      <Label text="Gimbal"/>
     </VBox>
     <VBox>
-      <GridPane styleClass="button-grid">
-        <Button GridPane.columnIndex="0" GridPane.rowIndex="0" text="&#x2B09;"
-          onMousePressed="#cul_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="1" GridPane.rowIndex="0" text="&#x2B06;"
-          onMousePressed="#cum_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="2" GridPane.rowIndex="0" text="&#x2B08;"
-          onMousePressed="#cur_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="0" GridPane.rowIndex="1" text="&#x2B05;"
-          onMousePressed="#cml_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="1" GridPane.rowIndex="1" text="&#x23f9;"
-          onMousePressed="#cmm_pressed"/>
-        <Button GridPane.columnIndex="2" GridPane.rowIndex="1" text="&#x2B95;"
-          onMousePressed="#cmr_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="0" GridPane.rowIndex="2" text="&#x2B0B;"
-          onMousePressed="#cbl_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="1" GridPane.rowIndex="2" text="&#x2B07;"
-          onMousePressed="#cbm_pressed" onMouseReleased="#chassis_released"/>
-        <Button GridPane.columnIndex="2" GridPane.rowIndex="2" text="&#x2B0A;"
-          onMousePressed="#cbr_pressed" onMouseReleased="#chassis_released"/>
-      </GridPane>
-      <TextField editable="false" text="Chassis"/>
-    </VBox>
-    <VBox maxWidth="70">
-      <fx:define>
-        <ToggleGroup fx:id="speed"/>
-      </fx:define>
-      <RadioButton toggleGroup="$speed" onAction="#radio_button4">4</RadioButton>
-      <RadioButton toggleGroup="$speed" onAction="#radio_button3">3</RadioButton>
-      <RadioButton toggleGroup="$speed" onAction="#radio_button2">2</RadioButton>
-      <RadioButton toggleGroup="$speed" onAction="#radio_button1" selected="true">1</RadioButton>
-      <TextField editable="false" text="Speed"/>
+      <HBox>
+        <VBox>
+          <GridPane styleClass="button-grid">
+            <Button GridPane.columnIndex="0" GridPane.rowIndex="0" text="&#x2B09;"
+              onMousePressed="#cul_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="0" text="&#x2B06;"
+              onMousePressed="#cum_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="2" GridPane.rowIndex="0" text="&#x2B08;"
+              onMousePressed="#cur_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="0" GridPane.rowIndex="1" text="&#x2B05;"
+              onMousePressed="#cml_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="1" text="&#x23f9;"
+              onMousePressed="#cmm_pressed"/>
+            <Button GridPane.columnIndex="2" GridPane.rowIndex="1" text="&#x2B95;"
+              onMousePressed="#cmr_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="0" GridPane.rowIndex="2" text="&#x2B0B;"
+              onMousePressed="#cbl_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="1" GridPane.rowIndex="2" text="&#x2B07;"
+              onMousePressed="#cbm_pressed" onMouseReleased="#chassis_released"/>
+            <Button GridPane.columnIndex="2" GridPane.rowIndex="2" text="&#x2B0A;"
+              onMousePressed="#cbr_pressed" onMouseReleased="#chassis_released"/>
+          </GridPane>
+          <HBox styleClass="light-slider">
+            <Label styleClass="slider-label" text="Light"/>
+            <Slider fx:id="chassis_light" orientation="HORIZONTAL" maxWidth="130"
+              min="0" max="255" value="0"/>
+          </HBox>
+        </VBox>
+        <VBox styleClass="speed-box">
+          <fx:define>
+            <ToggleGroup fx:id="speed"/>
+          </fx:define>
+          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button4">4</RadioButton>
+          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button3">3</RadioButton>
+          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button2">2</RadioButton>
+          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button1" selected="true">1
+          </RadioButton>
+          <Label styleClass="speed-label" text="Speed"/>
+        </VBox>
+      </HBox>
+      <Label text="Chassis"/>
     </VBox>
   </HBox>
 
@@ -98,5 +114,4 @@
     <Button text="Keyboard control" onAction="#enterKeyboardControl" onKeyPressed="#keyPressed"
       onKeyReleased="#keyReleased"/>
   </HBox>
-
 </VBox>

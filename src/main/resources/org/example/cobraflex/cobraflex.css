@@ -10,9 +10,13 @@ TextField {
   -fx-text-origin: bottom;
 }
 
+Label {
+  -fx-text-fill: white;
+}
+
 .panel {
-  -fx-spacing: 10;
-  -fx-padding: 30 10 20 10;
+  -fx-spacing: 15;
+  -fx-padding: 40 10 10 10;
 }
 
 .parameter-row {
@@ -23,11 +27,10 @@ TextField {
 .parameter {
   -fx-max-width: 100;
   -fx-alignment: bottom-center;
-  -fx-background-color: #DDDDDD;
 }
 
-.parameter .content {
-  -fx-background-color: #EEEEEE;
+.parameter-label {
+  -fx-padding: 5 0 0 0;
 }
 
 .button-grid-section {
@@ -39,19 +42,30 @@ TextField {
   -fx-alignment: bottom-center
  }
 
-.button-grid-section TextField {
-  -fx-background-color: #777777;
+ .light-slider {
+   -fx-padding: 10 0 10 20;
+ }
+
+.slider-label {
+  -fx-padding: 0 5 0 0;
+}
+
+.speed-box {
+  -fx-padding: 0 0 0 15
+}
+
+.speed-button {
+  -fx-padding: 8 0 8 0;
   -fx-text-fill: white;
 }
 
-.button-grid-section RadioButton {
-  -fx-padding: 0 0 15 10;
-  -fx-text-fill: white;
+.speed-label {
+  -fx-padding: 0 0 10 0;
 }
 
 .button-grid {
   -fx-background-radius: 5.0;
-  -fx-padding: 20 20 10 20;
+  -fx-padding: 10 10 10 20;
   -fx-hgap: 8;
   -fx-vgap: 8;
 }
@@ -63,9 +77,11 @@ TextField {
   -fx-font-family: sans-serif;
   -fx-font-size: 24;
 }
+
 .button-grid .button:pressed {
   -fx-background-color: #44ddff;
 }
+
 
 .button-row {
   -fx-spacing: 10;

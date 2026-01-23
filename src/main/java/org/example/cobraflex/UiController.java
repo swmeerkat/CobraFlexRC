@@ -61,7 +61,7 @@ public class UiController {
     JsonNode result = jetson.get(FEEDBACK_PATH);
     bf_odl.setText(getParamValue("odl", result));
     bf_odr.setText(getParamValue("odr", result));
-    bf_voltage.setText(roundParamValue("v", result));
+    bf_voltage.setText(roundParamValue(result));
     console.appendText(result + "\n");
   }
 
@@ -217,9 +217,9 @@ public class UiController {
     return "";
   }
 
-  private String roundParamValue(String parameter, JsonNode result) {
+  private String roundParamValue(JsonNode result) {
     if (!result.isEmpty()) {
-      Double num = Double.parseDouble(result.get(parameter).toString()) / 100;
+      Double num = Double.parseDouble(result.get("v").toString()) / 100;
       DecimalFormat df = new DecimalFormat("##.##");
       return df.format(num);
     }
