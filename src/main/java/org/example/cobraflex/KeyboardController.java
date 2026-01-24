@@ -69,10 +69,6 @@ public class KeyboardController {
           jetson.post(CMD_PATH, cmd);
         }
       }
-      case KeyCode.A -> {
-        String cmd = cobraflex.turn_pan_tilt_led();
-        jetson.post(CMD_PATH, cmd);
-      }
       case KeyCode.SPACE -> {
         String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
         jetson.post(CMD_PATH, cmd);

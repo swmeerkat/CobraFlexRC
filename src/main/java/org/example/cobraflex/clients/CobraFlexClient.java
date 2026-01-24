@@ -11,13 +11,11 @@ public class CobraFlexClient {
   private int speed;
   private int actPan;
   private int actTilt;
-  private boolean panTiltLed;
 
   public CobraFlexClient() {
     this.speed = SpeedLevel.LEVEL_ONE.getSpeed();
     this.actPan = 0;
     this.actTilt = 0;
-    this.panTiltLed = false;
   }
 
   public void setSpeed(SpeedLevel level) {
@@ -158,17 +156,11 @@ public class CobraFlexClient {
 
   /*
    *  CMD_LED_CTRL
+   *  IO1: chassis front led left and right
+   *  IO2: no function (difference to wiki description)
    *  IO5 controls pan-tilt LED
    */
-  public String turn_pan_tilt_led() {
-    int brightness;
-    if (!panTiltLed) {
-      panTiltLed = true;
-      brightness = 255;
-    } else {
-      panTiltLed = false;
-      brightness = 0;
-    }
-    return "{\"T\":132, \"IO4\":0,\"IO5\":" + brightness + "}";
+  public String ctrl_cobraflex_led(int brightness) {
+    return "{\"T\":132, \"IO1\":" + brightness + ",\"IO2\": 0}";
   }
 }

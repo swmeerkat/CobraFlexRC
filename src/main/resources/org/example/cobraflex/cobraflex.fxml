@@ -86,7 +86,7 @@
           </GridPane>
           <HBox styleClass="light-slider">
             <Label styleClass="slider-label" text="Light"/>
-            <Slider fx:id="chassis_light" orientation="HORIZONTAL" maxWidth="130"
+            <Slider fx:id="front_light" orientation="HORIZONTAL" maxWidth="130"
               min="0" max="255" value="0"/>
           </HBox>
         </VBox>

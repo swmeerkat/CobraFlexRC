@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -30,6 +31,8 @@ public class UiController {
   @FXML
   public TextField bf_voltage;
   @FXML
+  public Slider front_light;
+  @FXML
   public TextArea console;
 
   @Setter
@@ -37,22 +40,26 @@ public class UiController {
   private CobraFlexClient cobraflex;
   private JetsonOrinNanoClient jetson;
   private KeyboardController keyboardController;
-  private Timer gimbalTimer = null;
-  private Timer chassisTimer = null;
+  private Timer gimbalTimer;
+  private Timer chassisTimer;
+  private Timer feedbackTimer;
 
   @FXML
   public void initialize() {
     this.cobraflex = new CobraFlexClient();
     this.jetson = new JetsonOrinNanoClient();
     keyboardController = new KeyboardController(jetson, cobraflex);
-    Timer feedbackTimer = new Timer();
+    ctrl_cobraflex_led(0);
+    front_light.valueProperty().addListener(
+        (_, _, newValue) -> ctrl_cobraflex_led(newValue.intValue()));
+    feedbackTimer = new Timer();
     feedbackTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
         getFeedback();
       }
     }, 0, 10000);
-    Platform.runLater(() -> stage.setOnCloseRequest(_ -> feedbackTimer.cancel()));
+    Platform.runLater(() -> stage.setOnCloseRequest(_ -> exitApplication()));
     log.info("CobraFlex RC initialized");
   }
 
@@ -242,7 +249,9 @@ public class UiController {
 
   @FXML
   public void gimbal_released() {
-    gimbalTimer.cancel();
+    if (gimbalTimer != null) {
+      gimbalTimer.cancel();
+    }
     String cmd = cobraflex.cmd_gimbal_ctrl_stop();
     jetson.post(CMD_PATH, cmd);
   }
@@ -263,8 +272,22 @@ public class UiController {
 
   @FXML
   public void chassis_released() {
-    chassisTimer.cancel();
+    if (chassisTimer != null) {
+      chassisTimer.cancel();
+    }
     String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
     jetson.post(CMD_PATH, cmd);
+  }
+
+  private void ctrl_cobraflex_led(int brightness) {
+    String cmd = cobraflex.ctrl_cobraflex_led(brightness);
+    jetson.post(CMD_PATH, cmd);
+  }
+
+  private void exitApplication() {
+    feedbackTimer.cancel();
+    chassis_released();
+    gimbal_released();
+    ctrl_cobraflex_led(0);
   }
 }
