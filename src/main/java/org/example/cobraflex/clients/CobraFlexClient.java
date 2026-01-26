@@ -56,9 +56,9 @@ public class CobraFlexClient {
       }
       case NORTHEAST -> {
         leftF = speed;
-        rightF = SpeedLevel.LEVEL_ONE.getSpeed();
+        rightF = speed / 2;
         leftR = speed;
-        rightR = SpeedLevel.LEVEL_ONE.getSpeed();
+        rightR = speed / 2;
       }
       case EAST -> {
         leftF = speed;
