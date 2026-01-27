@@ -118,8 +118,8 @@ public class JetsonOrinNanoClient {
     try {
       connManager = PoolingHttpClientConnectionManagerBuilder.create().build();
       connManager.setDefaultConnectionConfig(ConnectionConfig.custom()
-          .setConnectTimeout(Timeout.ofSeconds(2))
-          .setSocketTimeout(Timeout.ofSeconds(2))
+          .setConnectTimeout(Timeout.ofSeconds(1))
+          .setSocketTimeout(Timeout.ofSeconds(1))
           .setTimeToLive(TimeValue.ofHours(1))
           .build());
     } catch (RuntimeException e) {

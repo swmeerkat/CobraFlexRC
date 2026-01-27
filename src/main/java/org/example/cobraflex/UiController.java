@@ -240,7 +240,7 @@ public class UiController {
         String cmd = cobraflex.cmd_speed_control(direction);
         jetson.post(CMD_PATH, cmd);
       }
-    }, 0, 1000);
+    }, 0, 1500);
   }
 
   @FXML
