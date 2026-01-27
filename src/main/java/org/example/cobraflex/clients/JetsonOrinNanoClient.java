@@ -65,7 +65,7 @@ public class JetsonOrinNanoClient {
           }
         }
       } catch (IOException e) {
-        log.error("Get client error: {}", e.getMessage());
+        log.error("Get: {}", e.getMessage());
       }
     }
     return responseData;
@@ -104,7 +104,7 @@ public class JetsonOrinNanoClient {
           }
         }
       } catch (IOException e) {
-        log.error("Post client error: {}", e.getMessage());
+        log.error("Post: {}", e.getMessage());
       }
     }
   }
@@ -119,7 +119,7 @@ public class JetsonOrinNanoClient {
           .setTimeToLive(TimeValue.ofHours(1))
           .build());
     } catch (RuntimeException e) {
-      log.error("PoolingHttpClientConnectionManager error: {}", e.getMessage());
+      log.error("PoolingHttpClientConnectionManager: {}", e.getMessage());
       connManager = null;
     }
     return connManager;

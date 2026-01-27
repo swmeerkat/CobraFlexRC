@@ -41,8 +41,7 @@
       </GridPane>
       <HBox styleClass="light-slider">
         <Label styleClass="light-label" text="Light"/>
-        <Slider fx:id="gimbal_light" orientation="HORIZONTAL" maxWidth="130"
-          min="0" max="255" value="0"/>
+        <Slider fx:id="gimbal_light" orientation="HORIZONTAL" minWidth="190" min="0" max="255" value="0"/>
       </HBox>
       <Label text="Gimbal"/>
     </VBox>
@@ -71,12 +70,11 @@
           </GridPane>
           <HBox styleClass="light-slider">
             <Label styleClass="light-label" text="Light"/>
-            <Slider fx:id="front_light" orientation="HORIZONTAL" maxWidth="130"
-              min="0" max="255" value="0"/>
+            <Slider fx:id="front_light" orientation="HORIZONTAL" minWidth="190" min="0" max="255" value="0"/>
           </HBox>
         </VBox>
         <VBox styleClass="speed-box">
-          <Slider fx:id="chassis_speed" orientation="VERTICAL" maxWidth="70" minHeight="150"
+          <Slider fx:id="chassis_speed" orientation="VERTICAL" maxWidth="70" minHeight="220"
             min="0" max="1800" value="500"/>
           <Label styleClass="speed-label" text="Speed"/>
         </VBox>

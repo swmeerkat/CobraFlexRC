@@ -4,12 +4,6 @@
   -fx-background-color: #777777;
 }
 
-TextField {
-  -fx-alignment: center;
-  -fx-text-alignment: center;
-  -fx-text-origin: bottom;
-}
-
 Label {
   -fx-text-fill: white;
 }
@@ -57,11 +51,12 @@ Label {
 }
 
 .button-grid .button {
-  -fx-pref-width: 50;
+  -fx-pref-width: 70;
+  -fx-pref-height: 70;
   -fx-padding: 10;
   -fx-background-color: #22bbff;
   -fx-font-family: sans-serif;
-  -fx-font-size: 24;
+  -fx-font-size: 36;
 }
 
 .button-grid .button:pressed {
