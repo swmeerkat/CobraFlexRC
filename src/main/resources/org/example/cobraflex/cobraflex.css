@@ -19,20 +19,6 @@ Label {
   -fx-padding: 40 10 10 10;
 }
 
-.parameter-row {
-  -fx-spacing: 13;
-  -fx-alignment: bottom-center;
-}
-
-.parameter {
-  -fx-max-width: 100;
-  -fx-alignment: bottom-center;
-}
-
-.parameter-label {
-  -fx-padding: 5 0 0 0;
-}
-
 .button-grid-section {
   -fx-alignment: center;
   -fx-padding: 0 0 10 0;

@@ -64,8 +64,6 @@ public class ESP32S3Client {
           responseData = client.execute(httpGet, response -> {
             if (response.getCode() >= 300) {
               log.error(new StatusLine(response).toString());
-              client.close();
-              throw new RuntimeException("ESPClientError");
             }
             final HttpEntity responseEntity = response.getEntity();
             if (responseEntity == null) {

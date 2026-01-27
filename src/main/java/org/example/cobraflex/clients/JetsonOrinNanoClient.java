@@ -50,8 +50,6 @@ public class JetsonOrinNanoClient {
         responseData = client.execute(httpGet, response -> {
           if (response.getCode() >= 300) {
             log.error(new StatusLine(response).toString());
-            client.close();
-            throw new RuntimeException("JetsonClientError");
           }
           final HttpEntity responseEntity = response.getEntity();
           if (responseEntity == null) {
@@ -91,8 +89,6 @@ public class JetsonOrinNanoClient {
         responseData = client.execute(httpPost, response -> {
           if (response.getCode() >= 300) {
             log.error(new StatusLine(response).toString());
-            client.close();
-            throw new RuntimeException("JetsonClientError");
           }
           final HttpEntity responseEntity = response.getEntity();
           if (responseEntity == null) {

@@ -17,13 +17,6 @@
     <URL value="@cobraflex.css"/>
   </stylesheets>
 
-  <HBox styleClass="parameter-row">
-    <VBox styleClass="parameter">
-      <TextField fx:id="bf_voltage" editable="false"/>
-      <Label styleClass="parameter-label" text="Voltage"/>
-    </VBox>
-  </HBox>
-
   <HBox styleClass="button-grid-section">
     <VBox>
       <GridPane styleClass="button-grid">

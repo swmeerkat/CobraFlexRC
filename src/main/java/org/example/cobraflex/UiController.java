@@ -8,7 +8,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.Setter;
@@ -23,8 +22,6 @@ public class UiController {
   private static final String FEEDBACK_PATH = "/cobraflex/feedback";
   private static final String CMD_PATH = "/cobraflex/cmd";
 
-  @FXML
-  public TextField bf_voltage;
   @FXML
   public Slider front_light;
   @FXML
@@ -60,7 +57,6 @@ public class UiController {
   @FXML
   public void getFeedback() {
     JsonNode result = jetson.get(FEEDBACK_PATH);
-    bf_voltage.setText(roundParamValue(result));
     console.appendText(result + "\n");
   }
 
