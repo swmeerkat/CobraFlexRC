@@ -31,48 +31,45 @@ public class KeyboardController {
   }
 
   public void keyPressed(KeyEvent e) {
+    String cmd = "{}";
     switch (e.getCode()) {
       case KeyCode.SHIFT -> optionKeyPressed = true;
       case KeyCode.H -> {
         if (optionKeyPressed) {
-          String cmd = cobraflex.gimbal_step(-1, 0);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.gimbal_step(-1, 0);
         } else {
-          String cmd = cobraflex.cmd_speed_control(MovingDirection.WEST);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.cmd_speed_control(MovingDirection.WEST);
         }
+        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.J -> {
         if (optionKeyPressed) {
-          String cmd = cobraflex.gimbal_step(0, 1);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.gimbal_step(0, 1);
         } else {
-          String cmd = cobraflex.cmd_speed_control(MovingDirection.NORTH);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.cmd_speed_control(MovingDirection.NORTH);
         }
+        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.K -> {
         if (optionKeyPressed) {
-          String cmd = cobraflex.gimbal_step(0, -1);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.gimbal_step(0, -1);
         } else {
-          String cmd = cobraflex.cmd_speed_control(MovingDirection.SOUTH);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.cmd_speed_control(MovingDirection.SOUTH);
         }
+        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.L -> {
         if (optionKeyPressed) {
-          String cmd = cobraflex.gimbal_step(1, 0);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.gimbal_step(1, 0);
         } else {
-          String cmd = cobraflex.cmd_speed_control(MovingDirection.EAST);
-          jetson.post(CMD_PATH, cmd);
+          cmd = cobraflex.cmd_speed_control(MovingDirection.EAST);
         }
+        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.SPACE -> {
-        String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
+        cobraflex.cmd_speed_control(MovingDirection.STOP);
         jetson.post(CMD_PATH, cmd);
-        cmd = cobraflex.cmd_gimbal_ctrl_stop();
+        cobraflex.cmd_gimbal_ctrl_stop();
         jetson.post(CMD_PATH, cmd);
       }
       default -> log.info("unexpected key pressed: char={} code={}, ignored",

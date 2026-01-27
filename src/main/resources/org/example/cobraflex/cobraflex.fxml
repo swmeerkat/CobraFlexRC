@@ -55,7 +55,7 @@
           onMousePressed="#gbr_pressed" onMouseReleased="#gimbal_released"/>
       </GridPane>
       <HBox styleClass="light-slider">
-        <Label styleClass="slider-label" text="Light"/>
+        <Label styleClass="light-label" text="Light"/>
         <Slider fx:id="gimbal_light" orientation="HORIZONTAL" maxWidth="130"
           min="0" max="255" value="0"/>
       </HBox>
@@ -85,20 +85,14 @@
               onMousePressed="#cbr_pressed" onMouseReleased="#chassis_released"/>
           </GridPane>
           <HBox styleClass="light-slider">
-            <Label styleClass="slider-label" text="Light"/>
+            <Label styleClass="light-label" text="Light"/>
             <Slider fx:id="front_light" orientation="HORIZONTAL" maxWidth="130"
               min="0" max="255" value="0"/>
           </HBox>
         </VBox>
         <VBox styleClass="speed-box">
-          <fx:define>
-            <ToggleGroup fx:id="speed"/>
-          </fx:define>
-          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button4">4</RadioButton>
-          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button3">3</RadioButton>
-          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button2">2</RadioButton>
-          <RadioButton styleClass="speed-button" toggleGroup="$speed" onAction="#radio_button1" selected="true">1
-          </RadioButton>
+          <Slider fx:id="chassis_speed" orientation="VERTICAL" maxWidth="70" minHeight="150"
+            min="0" max="1800" value="300"/>
           <Label styleClass="speed-label" text="Speed"/>
         </VBox>
       </HBox>

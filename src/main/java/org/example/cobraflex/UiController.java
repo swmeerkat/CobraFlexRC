@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.cobraflex.clients.CobraFlexClient;
 import org.example.cobraflex.clients.JetsonOrinNanoClient;
 import org.example.cobraflex.clients.MovingDirection;
-import org.example.cobraflex.clients.SpeedLevel;
 
 @Slf4j
 public class UiController {
@@ -33,6 +32,8 @@ public class UiController {
   @FXML
   public Slider front_light;
   @FXML
+  public Slider chassis_speed;
+  @FXML
   public TextArea console;
 
   @Setter
@@ -44,6 +45,7 @@ public class UiController {
   private Timer chassisTimer;
   private Timer feedbackTimer;
 
+
   @FXML
   public void initialize() {
     this.cobraflex = new CobraFlexClient();
@@ -51,7 +53,11 @@ public class UiController {
     keyboardController = new KeyboardController(jetson, cobraflex);
     ctrl_cobraflex_led(0);
     front_light.valueProperty().addListener(
-        (_, _, newValue) -> ctrl_cobraflex_led(newValue.intValue()));
+        (_, _, newValue) ->
+            ctrl_cobraflex_led(newValue.intValue()));
+    chassis_speed.valueProperty().addListener(
+        (_, _, newValue) ->
+            ctrl_chassis_speed(newValue.intValue()));
     feedbackTimer = new Timer();
     feedbackTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
@@ -183,26 +189,6 @@ public class UiController {
   }
 
   @FXML
-  public void radio_button4() {
-    cobraflex.setSpeed(SpeedLevel.LEVEL_FOUR);
-  }
-
-  @FXML
-  public void radio_button3() {
-    cobraflex.setSpeed(SpeedLevel.LEVEL_THREE);
-  }
-
-  @FXML
-  public void radio_button2() {
-    cobraflex.setSpeed(SpeedLevel.LEVEL_TWO);
-  }
-
-  @FXML
-  public void radio_button1() {
-    cobraflex.setSpeed(SpeedLevel.LEVEL_ONE);
-  }
-
-  @FXML
   public void keyPressed(KeyEvent event) {
     keyboardController.keyPressed(event);
   }
@@ -282,6 +268,10 @@ public class UiController {
   private void ctrl_cobraflex_led(int brightness) {
     String cmd = cobraflex.ctrl_cobraflex_led(brightness);
     jetson.post(CMD_PATH, cmd);
+  }
+
+  private void ctrl_chassis_speed(int speed_level) {
+    cobraflex.setSpeed_level(speed_level);
   }
 
   private void exitApplication() {
