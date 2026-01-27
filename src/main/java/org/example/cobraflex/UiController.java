@@ -1,7 +1,6 @@
 package org.example.cobraflex;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
@@ -31,11 +30,13 @@ public class UiController {
 
   @Setter
   private Stage stage;
+
   private CobraFlexClient cobraflex;
   private JetsonOrinNanoClient jetson;
   private KeyboardController keyboardController;
   private Timer gimbalTimer;
   private Timer chassisTimer;
+  private MovingDirection currentDirection = MovingDirection.STOP;
 
 
   @FXML
@@ -49,7 +50,7 @@ public class UiController {
             ctrl_cobraflex_led(newValue.intValue()));
     chassis_speed.valueProperty().addListener(
         (_, _, newValue) ->
-            ctrl_chassis_speed(newValue.intValue()));
+            cobraflex.setSpeedLevel(newValue.intValue()));
     Platform.runLater(() -> stage.setOnCloseRequest(_ -> exitApplication()));
     log.info("CobraFlex RC initialized");
   }
@@ -124,24 +125,28 @@ public class UiController {
   // chassis upper middle button
   @FXML
   public void cum_pressed() {
+    currentDirection = MovingDirection.NORTH;
     repeat_chassis_cmd(MovingDirection.NORTH);
   }
 
   // chassis upper right button
   @FXML
   public void cur_pressed() {
+    currentDirection = MovingDirection.NORTHEAST;
     repeat_chassis_cmd(MovingDirection.NORTHEAST);
   }
 
   // chassis middle left button
   @FXML
   public void cml_pressed() {
+    currentDirection = MovingDirection.WEST;
     repeat_chassis_cmd(MovingDirection.WEST);
   }
 
   // chassis middle middle button
   @FXML
   public void cmm_pressed() {
+    currentDirection = MovingDirection.STOP;
     String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
     jetson.post(CMD_PATH, cmd);
   }
@@ -149,24 +154,28 @@ public class UiController {
   // chassis middle right button
   @FXML
   public void cmr_pressed() {
+    currentDirection = MovingDirection.EAST;
     repeat_chassis_cmd(MovingDirection.EAST);
   }
 
   // chassis bottom left button
   @FXML
   public void cbl_pressed() {
+    currentDirection = MovingDirection.SOUTHWEST;
     repeat_chassis_cmd(MovingDirection.SOUTHWEST);
   }
 
   // chassis bottom middle button
   @FXML
   public void cbm_pressed() {
+    currentDirection = MovingDirection.SOUTH;
     repeat_chassis_cmd(MovingDirection.SOUTH);
   }
 
   // chassis bottom right button
   @FXML
   public void cbr_pressed() {
+    currentDirection = MovingDirection.SOUTHEAST;
     repeat_chassis_cmd(MovingDirection.SOUTHEAST);
   }
 
@@ -183,22 +192,6 @@ public class UiController {
   @FXML
   public void enterKeyboardControl() {
     // focus on button is sufficient
-  }
-
-  private String getParamValue(String parameter, JsonNode result) {
-    if (!result.isEmpty()) {
-      return result.get(parameter).toString();
-    }
-    return "";
-  }
-
-  private String roundParamValue(JsonNode result) {
-    if (!result.isEmpty()) {
-      Double num = Double.parseDouble(result.get("v").toString()) / 100;
-      DecimalFormat df = new DecimalFormat("##.##");
-      return df.format(num);
-    }
-    return "";
   }
 
   private void repeat_gimbal_cmd(int delta_pan, int delta_tilt) {
@@ -229,6 +222,20 @@ public class UiController {
     if (chassisTimer != null) {
       chassisTimer.cancel();
     }
+    int speedLevel = cobraflex.getSpeedLevel();
+    int i = 100;
+    while (i < speedLevel) {
+      cobraflex.setSpeedLevel(i);
+      String cmd = cobraflex.cmd_speed_control(direction);
+      jetson.post(CMD_PATH, cmd);
+      try {
+        Thread.sleep(20);
+      } catch (InterruptedException e) {
+        log.error(e.getMessage());
+      }
+      i += 50;
+    }
+    cobraflex.setSpeedLevel(speedLevel);
     chassisTimer = new Timer();
     chassisTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
@@ -236,7 +243,7 @@ public class UiController {
         String cmd = cobraflex.cmd_speed_control(direction);
         jetson.post(CMD_PATH, cmd);
       }
-    }, 0, 1500);
+    }, 0, 1200);
   }
 
   @FXML
@@ -244,18 +251,31 @@ public class UiController {
     if (chassisTimer != null) {
       chassisTimer.cancel();
     }
-    String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
-    jetson.post(CMD_PATH, cmd);
+    if (currentDirection != MovingDirection.STOP) {
+      int last_speedLevel = cobraflex.getSpeedLevel();
+      int i = last_speedLevel;
+      while (i > 200) {
+        i -= 200;
+        cobraflex.setSpeedLevel(i);
+        String cmd = cobraflex.cmd_speed_control(currentDirection);
+        jetson.post(CMD_PATH, cmd);
+        try {
+          Thread.sleep(5);
+        } catch (InterruptedException e) {
+          log.error(e.getMessage());
+        }
+      }
+      cobraflex.setSpeedLevel(last_speedLevel);
+      currentDirection = MovingDirection.STOP;
+      String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
+      jetson.post(CMD_PATH, cmd);
+    }
     getFeedback();
   }
 
   private void ctrl_cobraflex_led(int brightness) {
     String cmd = cobraflex.ctrl_cobraflex_led(brightness);
     jetson.post(CMD_PATH, cmd);
-  }
-
-  private void ctrl_chassis_speed(int speed_level) {
-    cobraflex.setSpeed_level(speed_level);
   }
 
   private void exitApplication() {

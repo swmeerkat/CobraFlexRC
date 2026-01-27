@@ -12,17 +12,28 @@ import lombok.Setter;
 public class CobraFlexClient {
 
   @Getter
-  private static final int DEFAULT_SPEED = 500;
-
+  private final int DEFAULT_SPEED = 500;
+  @Getter
+  private int speedLevel;
   @Setter
-  private int speed_level;
+  @Getter
   private int actPan;
+  @Setter
+  @Getter
   private int actTilt;
 
+
   public CobraFlexClient() {
-    this.speed_level = getDEFAULT_SPEED();
+    this.speedLevel = getDEFAULT_SPEED();
     this.actPan = 0;
     this.actTilt = 0;
+  }
+
+  public void setSpeedLevel(int speedLevel) {
+    if (speedLevel < 0) {
+      speedLevel = 0;
+    }
+    this.speedLevel = speedLevel;
   }
 
   /*
@@ -45,59 +56,59 @@ public class CobraFlexClient {
    * Input:
    *  - L, R: speed of the wheel, value range 0.5 - -0.5
    */
-  public String cmd_speed_control(MovingDirection direction ) {
+  public String cmd_speed_control(MovingDirection direction) {
     int leftF = 0;
     int rightF = 0;
     int leftR = 0;
     int rightR = 0;
     switch (direction) {
       case NORTH -> {
-        leftF = speed_level;
-        rightF = speed_level;
-        leftR = speed_level;
-        rightR = speed_level;
+        leftF = speedLevel;
+        rightF = speedLevel;
+        leftR = speedLevel;
+        rightR = speedLevel;
       }
       case NORTHEAST -> {
-        leftF = speed_level;
-        rightF = speed_level / 2;
-        leftR = speed_level;
-        rightR = speed_level / 2;
+        leftF = speedLevel;
+        rightF = speedLevel / 2;
+        leftR = speedLevel;
+        rightR = speedLevel / 2;
       }
       case EAST -> {
-        leftF = speed_level;
-        rightF = -speed_level;
-        leftR = speed_level;
-        rightR = -speed_level;
+        leftF = speedLevel;
+        rightF = -speedLevel;
+        leftR = speedLevel;
+        rightR = -speedLevel;
       }
       case SOUTHEAST -> {
-        leftF = -speed_level;
-        rightF = -speed_level / 2;
-        leftR = -speed_level;
-        rightR = -speed_level / 2;
+        leftF = -speedLevel;
+        rightF = -speedLevel / 2;
+        leftR = -speedLevel;
+        rightR = -speedLevel / 2;
       }
       case SOUTH -> {
-        leftF = -speed_level;
-        rightF = -speed_level;
-        leftR = -speed_level;
-        rightR = -speed_level;
+        leftF = -speedLevel;
+        rightF = -speedLevel;
+        leftR = -speedLevel;
+        rightR = -speedLevel;
       }
       case SOUTHWEST -> {
-        leftF = -speed_level / 2;
-        rightF = -speed_level;
-        leftR = -speed_level / 2;
-        rightR = -speed_level;
+        leftF = -speedLevel / 2;
+        rightF = -speedLevel;
+        leftR = -speedLevel / 2;
+        rightR = -speedLevel;
       }
       case WEST -> {
-        leftF = -speed_level;
-        rightF = speed_level;
-        leftR = -speed_level;
-        rightR = speed_level;
+        leftF = -speedLevel;
+        rightF = speedLevel;
+        leftR = -speedLevel;
+        rightR = speedLevel;
       }
       case NORTHWEST -> {
-        leftF = speed_level / 2;
-        rightF = speed_level;
-        leftR = speed_level / 2;
-        rightR = speed_level;
+        leftF = speedLevel / 2;
+        rightF = speedLevel;
+        leftR = speedLevel / 2;
+        rightR = speedLevel;
       }
       case STOP -> {
       }
