@@ -24,10 +24,6 @@ public class UiController {
   private static final String CMD_PATH = "/cobraflex/cmd";
 
   @FXML
-  public TextField bf_odl;
-  @FXML
-  public TextField bf_odr;
-  @FXML
   public TextField bf_voltage;
   @FXML
   public Slider front_light;
@@ -43,7 +39,6 @@ public class UiController {
   private KeyboardController keyboardController;
   private Timer gimbalTimer;
   private Timer chassisTimer;
-  private Timer feedbackTimer;
 
 
   @FXML
@@ -58,13 +53,6 @@ public class UiController {
     chassis_speed.valueProperty().addListener(
         (_, _, newValue) ->
             ctrl_chassis_speed(newValue.intValue()));
-    feedbackTimer = new Timer();
-    feedbackTimer.scheduleAtFixedRate(new TimerTask() {
-      @Override
-      public void run() {
-        getFeedback();
-      }
-    }, 0, 10000);
     Platform.runLater(() -> stage.setOnCloseRequest(_ -> exitApplication()));
     log.info("CobraFlex RC initialized");
   }
@@ -72,8 +60,6 @@ public class UiController {
   @FXML
   public void getFeedback() {
     JsonNode result = jetson.get(FEEDBACK_PATH);
-    bf_odl.setText(getParamValue("odl", result));
-    bf_odr.setText(getParamValue("odr", result));
     bf_voltage.setText(roundParamValue(result));
     console.appendText(result + "\n");
   }
@@ -240,6 +226,7 @@ public class UiController {
     }
     String cmd = cobraflex.cmd_gimbal_ctrl_stop();
     jetson.post(CMD_PATH, cmd);
+    getFeedback();
   }
 
   private void repeat_chassis_cmd(MovingDirection direction) {
@@ -263,6 +250,7 @@ public class UiController {
     }
     String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
     jetson.post(CMD_PATH, cmd);
+    getFeedback();
   }
 
   private void ctrl_cobraflex_led(int brightness) {
@@ -275,7 +263,6 @@ public class UiController {
   }
 
   private void exitApplication() {
-    feedbackTimer.cancel();
     chassis_released();
     gimbal_released();
     ctrl_cobraflex_led(0);

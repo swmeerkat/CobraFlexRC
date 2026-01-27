@@ -19,14 +19,6 @@
 
   <HBox styleClass="parameter-row">
     <VBox styleClass="parameter">
-      <TextField fx:id="bf_odl" editable="false"/>
-      <Label styleClass="parameter-label" text="ODL"/>
-    </VBox>
-    <VBox styleClass="parameter">
-      <TextField fx:id="bf_odr" editable="false"/>
-      <Label styleClass="parameter-label" text="ODR"/>
-    </VBox>
-    <VBox styleClass="parameter">
       <TextField fx:id="bf_voltage" editable="false"/>
       <Label styleClass="parameter-label" text="Voltage"/>
     </VBox>
