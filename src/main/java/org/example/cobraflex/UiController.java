@@ -229,11 +229,11 @@ public class UiController {
       String cmd = cobraflex.cmd_speed_control(direction);
       jetson.post(CMD_PATH, cmd);
       try {
-        Thread.sleep(20);
+        Thread.sleep(50);
       } catch (InterruptedException e) {
         log.error(e.getMessage());
       }
-      i += 50;
+      i += 100;
     }
     cobraflex.setSpeedLevel(speedLevel);
     chassisTimer = new Timer();
@@ -255,12 +255,12 @@ public class UiController {
       int last_speedLevel = cobraflex.getSpeedLevel();
       int i = last_speedLevel;
       while (i > 200) {
-        i -= 200;
+        i -= 100;
         cobraflex.setSpeedLevel(i);
         String cmd = cobraflex.cmd_speed_control(currentDirection);
         jetson.post(CMD_PATH, cmd);
         try {
-          Thread.sleep(5);
+          Thread.sleep(10);
         } catch (InterruptedException e) {
           log.error(e.getMessage());
         }
