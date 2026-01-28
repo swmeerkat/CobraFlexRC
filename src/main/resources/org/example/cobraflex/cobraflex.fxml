@@ -75,7 +75,7 @@
         </VBox>
         <VBox styleClass="speed-box">
           <Slider fx:id="chassis_speed" orientation="VERTICAL" maxWidth="70" minHeight="220"
-            min="0" max="1800" value="500"/>
+            min="0" max="1800" value="900"/>
           <Label styleClass="speed-label" text="Speed"/>
         </VBox>
       </HBox>

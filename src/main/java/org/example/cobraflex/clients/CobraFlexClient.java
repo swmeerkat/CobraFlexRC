@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CobraFlexClient {
 
   @Getter
-  private final int DEFAULT_SPEED = 500;
+  private final int DEFAULT_SPEED = 900;
   @Getter
   private int speedLevel;
   @Setter
@@ -70,9 +70,9 @@ public class CobraFlexClient {
       }
       case NORTHEAST -> {
         leftF = speedLevel;
-        rightF = speedLevel / 2;
+        rightF = speedLevel / 3;
         leftR = speedLevel;
-        rightR = speedLevel / 2;
+        rightR = speedLevel / 3;
       }
       case EAST -> {
         leftF = speedLevel;
@@ -82,9 +82,9 @@ public class CobraFlexClient {
       }
       case SOUTHEAST -> {
         leftF = -speedLevel;
-        rightF = -speedLevel / 2;
+        rightF = -speedLevel / 3;
         leftR = -speedLevel;
-        rightR = -speedLevel / 2;
+        rightR = -speedLevel / 3;
       }
       case SOUTH -> {
         leftF = -speedLevel;
@@ -93,9 +93,9 @@ public class CobraFlexClient {
         rightR = -speedLevel;
       }
       case SOUTHWEST -> {
-        leftF = -speedLevel / 2;
+        leftF = -speedLevel / 3;
         rightF = -speedLevel;
-        leftR = -speedLevel / 2;
+        leftR = -speedLevel / 3;
         rightR = -speedLevel;
       }
       case WEST -> {
@@ -105,9 +105,9 @@ public class CobraFlexClient {
         rightR = speedLevel;
       }
       case NORTHWEST -> {
-        leftF = speedLevel / 2;
+        leftF = speedLevel / 3;
         rightF = speedLevel;
-        leftR = speedLevel / 2;
+        leftR = speedLevel / 3;
         rightR = speedLevel;
       }
       case STOP -> {
