@@ -22,7 +22,9 @@ public class UiController {
   private static final String CMD_PATH = "/cobraflex/cmd";
 
   @FXML
-  public Slider front_light;
+  public Slider chassis_light;
+  @FXML
+  public Slider gimbal_light;
   @FXML
   public Slider chassis_speed;
   @FXML
@@ -44,10 +46,14 @@ public class UiController {
     this.cobraflex = new CobraFlexClient();
     this.jetson = new JetsonOrinNanoClient();
     keyboardController = new KeyboardController(jetson, cobraflex);
-    ctrl_cobraflex_led(0);
-    front_light.valueProperty().addListener(
+    ctrl_chassis_led(0);
+    ctrl_gimbal_led(0);
+    chassis_light.valueProperty().addListener(
         (_, _, newValue) ->
-            ctrl_cobraflex_led(newValue.intValue()));
+            ctrl_chassis_led(newValue.intValue()));
+    gimbal_light.valueProperty().addListener(
+        (_, _, newValue) ->
+            ctrl_gimbal_led(newValue.intValue()));
     chassis_speed.valueProperty().addListener(
         (_, _, newValue) ->
             cobraflex.setSpeedLevel(newValue.intValue()));
@@ -89,7 +95,7 @@ public class UiController {
   @FXML
   public void gmm_pressed() {
     String cmd = cobraflex.cmd_gimbal_ctrl_simple(0, 0);
-    jetson.post(CMD_PATH, cmd);
+    jetson.post("/gimbal/cmd/middle_position", cmd);
   }
 
   // gimbal middle right button
@@ -273,14 +279,20 @@ public class UiController {
     getFeedback();
   }
 
-  private void ctrl_cobraflex_led(int brightness) {
-    String cmd = cobraflex.ctrl_cobraflex_led(brightness);
+  private void ctrl_chassis_led(int brightness) {
+    String cmd = cobraflex.ctrl_chassis_led(brightness);
+    jetson.post(CMD_PATH, cmd);
+  }
+
+  private void ctrl_gimbal_led(int brightness) {
+    String cmd = cobraflex.ctrl_gimbal_led(brightness);
     jetson.post(CMD_PATH, cmd);
   }
 
   private void exitApplication() {
     chassis_released();
     gimbal_released();
-    ctrl_cobraflex_led(0);
+    ctrl_chassis_led(0);
+    ctrl_gimbal_led(0);
   }
 }

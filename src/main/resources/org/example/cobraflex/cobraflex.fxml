@@ -70,7 +70,7 @@
           </GridPane>
           <HBox styleClass="light-slider">
             <Label styleClass="light-label" text="Light"/>
-            <Slider fx:id="front_light" orientation="HORIZONTAL" minWidth="190" min="0" max="255" value="0"/>
+            <Slider fx:id="chassis_light" orientation="HORIZONTAL" minWidth="190" min="0" max="255" value="0"/>
           </HBox>
         </VBox>
         <VBox styleClass="speed-box">

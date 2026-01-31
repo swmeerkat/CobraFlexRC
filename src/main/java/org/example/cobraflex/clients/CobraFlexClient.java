@@ -22,6 +22,9 @@ public class CobraFlexClient {
   @Getter
   private int actTilt;
 
+  private int actualChassisLight = 0;
+  private int actualGimbalLight = 0;
+
 
   public CobraFlexClient() {
     this.speedLevel = getDEFAULT_SPEED();
@@ -171,10 +174,32 @@ public class CobraFlexClient {
   /*
    *  CMD_LED_CTRL
    *  IO1: chassis front led left and right
-   *  IO2: no function (difference to wiki description)
-   *  IO5 controls pan-tilt LED
    */
-  public String ctrl_cobraflex_led(int brightness) {
-    return "{\"T\":132, \"IO1\":" + brightness + ",\"IO2\": 0}";
+  public String ctrl_chassis_led(int brightness) {
+    if (brightness < 0) {
+      brightness = 0;
+    } else if (brightness > 255) {
+      brightness = 255;
+    }
+    if (brightness != actualChassisLight) {
+      actualChassisLight = brightness;
+    }
+    return "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
+  }
+
+  /*
+   *  CMD_LED_CTRL
+   *  IO2: gimbal led
+   */
+  public String ctrl_gimbal_led(int brightness) {
+    if (brightness < 0) {
+      brightness = 0;
+    } else if (brightness > 255) {
+      brightness = 255;
+    }
+    if (brightness != actualGimbalLight) {
+      actualGimbalLight = brightness;
+    }
+    return "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
   }
 }
