@@ -12,14 +12,10 @@ import javafx.stage.Stage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cobraflex.clients.CobraFlexClient;
-import org.example.cobraflex.clients.JetsonOrinNanoClient;
 import org.example.cobraflex.clients.MovingDirection;
 
 @Slf4j
 public class UiController {
-
-  private static final String FEEDBACK_PATH = "/cobraflex/feedback";
-  private static final String CMD_PATH = "/cobraflex/cmd";
 
   @FXML
   public Slider chassis_light;
@@ -34,7 +30,6 @@ public class UiController {
   private Stage stage;
 
   private CobraFlexClient cobraflex;
-  private JetsonOrinNanoClient jetson;
   private KeyboardController keyboardController;
   private Timer gimbalTimer;
   private Timer chassisTimer;
@@ -44,8 +39,7 @@ public class UiController {
   @FXML
   public void initialize() {
     this.cobraflex = new CobraFlexClient();
-    this.jetson = new JetsonOrinNanoClient();
-    keyboardController = new KeyboardController(jetson, cobraflex);
+    keyboardController = new KeyboardController(cobraflex);
     ctrl_chassis_led(0);
     ctrl_gimbal_led(0);
     chassis_light.valueProperty().addListener(
@@ -63,68 +57,68 @@ public class UiController {
 
   @FXML
   public void getFeedback() {
-    JsonNode result = jetson.get(FEEDBACK_PATH);
+    JsonNode result = cobraflex.get_feedback();
     console.appendText(result + "\n");
   }
 
   // gimbal upper left button
   @FXML
   public void gul_pressed() {
-    repeat_gimbal_cmd(-1, 1);
+    repeat_gimbal_cmd(-100, -100);
   }
 
   // gimbal upper middle button
   @FXML
   public void gum_pressed() {
-    repeat_gimbal_cmd(0, 1);
+    repeat_gimbal_cmd(0, -100);
   }
 
   // gimbal upper right button
   @FXML
   public void gur_pressed() {
-    repeat_gimbal_cmd(1, 1);
+    repeat_gimbal_cmd(100, -100);
   }
 
   // gimbal middle left button
   @FXML
   public void gml_pressed() {
-    repeat_gimbal_cmd(-1, 0);
+    repeat_gimbal_cmd(-100, 0);
   }
 
   // gimbal middle middle button
   @FXML
   public void gmm_pressed() {
-    String cmd = cobraflex.cmd_gimbal_ctrl_simple(0, 0);
-    jetson.post("/gimbal/cmd/middle_position", cmd);
+    cobraflex.gimbal_middle_pos();
   }
 
   // gimbal middle right button
   @FXML
   public void gmr_pressed() {
-    repeat_gimbal_cmd(1, 0);
+    repeat_gimbal_cmd(100, 0);
   }
 
   // gimbal bottom left button
   @FXML
   public void gbl_pressed() {
-    repeat_gimbal_cmd(-1, -1);
+    repeat_gimbal_cmd(-100, 100);
   }
 
   // gimbal bottom middle button
   @FXML
   public void gbm_pressed() {
-    repeat_gimbal_cmd(0, -1);
+    repeat_gimbal_cmd(0, 100);
   }
 
   // gimbal bottom right button
   @FXML
   public void gbr_pressed() {
-    repeat_gimbal_cmd(1, -1);
+    repeat_gimbal_cmd(100, 100);
   }
 
   // chassis upper left button
   @FXML
   public void cul_pressed() {
+    currentDirection = MovingDirection.NORTHWEST;
     repeat_chassis_cmd(MovingDirection.NORTHWEST);
   }
 
@@ -153,8 +147,7 @@ public class UiController {
   @FXML
   public void cmm_pressed() {
     currentDirection = MovingDirection.STOP;
-    String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
-    jetson.post(CMD_PATH, cmd);
+    cobraflex.cmd_speed_control(MovingDirection.STOP);
   }
 
   // chassis middle right button
@@ -208,8 +201,7 @@ public class UiController {
     gimbalTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        String cmd = cobraflex.gimbal_step(delta_pan, delta_tilt);
-        jetson.post(CMD_PATH, cmd);
+        cobraflex.gimbal_step(delta_pan, delta_tilt);
       }
     }, 0, 50);
   }
@@ -219,8 +211,6 @@ public class UiController {
     if (gimbalTimer != null) {
       gimbalTimer.cancel();
     }
-    String cmd = cobraflex.cmd_gimbal_ctrl_stop();
-    jetson.post(CMD_PATH, cmd);
     getFeedback();
   }
 
@@ -232,8 +222,7 @@ public class UiController {
     int i = 100;
     while (i < speedLevel) {
       cobraflex.setSpeedLevel(i);
-      String cmd = cobraflex.cmd_speed_control(direction);
-      jetson.post(CMD_PATH, cmd);
+      cobraflex.cmd_speed_control(direction);
       try {
         Thread.sleep(50);
       } catch (InterruptedException e) {
@@ -246,8 +235,7 @@ public class UiController {
     chassisTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        String cmd = cobraflex.cmd_speed_control(direction);
-        jetson.post(CMD_PATH, cmd);
+        cobraflex.cmd_speed_control(direction);
       }
     }, 0, 2500);
   }
@@ -263,8 +251,7 @@ public class UiController {
       while (i > 200) {
         i -= 100;
         cobraflex.setSpeedLevel(i);
-        String cmd = cobraflex.cmd_speed_control(currentDirection);
-        jetson.post(CMD_PATH, cmd);
+        cobraflex.cmd_speed_control(currentDirection);
         try {
           Thread.sleep(10);
         } catch (InterruptedException e) {
@@ -273,20 +260,17 @@ public class UiController {
       }
       cobraflex.setSpeedLevel(last_speedLevel);
       currentDirection = MovingDirection.STOP;
-      String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
-      jetson.post(CMD_PATH, cmd);
+      cobraflex.cmd_speed_control(MovingDirection.STOP);
     }
     getFeedback();
   }
 
   private void ctrl_chassis_led(int brightness) {
-    String cmd = cobraflex.ctrl_chassis_led(brightness);
-    jetson.post(CMD_PATH, cmd);
+    cobraflex.ctrl_chassis_led(brightness);
   }
 
   private void ctrl_gimbal_led(int brightness) {
-    String cmd = cobraflex.ctrl_gimbal_led(brightness);
-    jetson.post(CMD_PATH, cmd);
+    cobraflex.ctrl_gimbal_led(brightness);
   }
 
   private void exitApplication() {

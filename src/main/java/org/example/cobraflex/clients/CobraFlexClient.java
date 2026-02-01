@@ -1,5 +1,6 @@
 package org.example.cobraflex.clients;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,11 @@ import lombok.Setter;
  *  - https://www.waveshare.com/wiki/2-Axis_Pan-Tilt_Camera_Module
  */
 public class CobraFlexClient {
+
+  private static final String FEEDBACK_PATH = "/cobraflex/feedback";
+  private static final String CMD_PATH = "/cobraflex/cmd";
+  private static final String GIMBAL_STEP_PATH = "/gimbal/step";
+  private static final String GIMBAL_MIDDLE_POS_PATH = "/gimbal/middle_position";
 
   @Getter
   private final int DEFAULT_SPEED = 900;
@@ -22,11 +28,13 @@ public class CobraFlexClient {
   @Getter
   private int actTilt;
 
+  private final JetsonOrinNanoClient jetson;
   private int actualChassisLight = 0;
   private int actualGimbalLight = 0;
 
 
   public CobraFlexClient() {
+    this.jetson = new JetsonOrinNanoClient();
     this.speedLevel = getDEFAULT_SPEED();
     this.actPan = 0;
     this.actTilt = 0;
@@ -50,8 +58,8 @@ public class CobraFlexClient {
    *  - odr: mileage of the right wheel in cm after the last start of the chassis
    *  - v: voltage in mV
    */
-  public String cmd_feedback() {
-    return "{\"T\":130}";
+  public JsonNode get_feedback() {
+    return jetson.get(FEEDBACK_PATH);
   }
 
   /*
@@ -59,7 +67,7 @@ public class CobraFlexClient {
    * Input:
    *  - L, R: speed of the wheel, value range 0.5 - -0.5
    */
-  public String cmd_speed_control(MovingDirection direction) {
+  public void cmd_speed_control(MovingDirection direction) {
     int leftF = 0;
     int rightF = 0;
     int leftR = 0;
@@ -116,66 +124,29 @@ public class CobraFlexClient {
       case STOP -> {
       }
     }
-    return "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":"
+    String cmd = "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":"
         + leftR + "}";
+    jetson.post(CMD_PATH, cmd);
+  }
+
+  public void gimbal_middle_pos() {
+    jetson.post(GIMBAL_MIDDLE_POS_PATH, "{}");
   }
 
   /*
-   * CMD_GIMBAL_CTRL_SIMPLE
-   * Input:
-   *  - X: PAN, value range -180 to 180
-   *  - Y: Tilt, value range -30 to 90
-   *  - SPD: Speed, 0 means fastest
-   *  - ACC: Acceleration, 0 means fastest
+   * delta_pan: -100 -> left, 0 -> no step, 100 -> right
+   * delta_tilt: -100 -> up, 0 -> no step, 100 -> up
    */
-  public String cmd_gimbal_ctrl_simple(int pan, int tilt) {
-    String cmd = "{\"T\":133,\"X\":" + pan + ",\"Y\":" + tilt + ",\"SPD\":0,\"ACC\":0} ";
-    actPan = pan;
-    actTilt = tilt;
-    return cmd;
-  }
-
-  /*
-   * CMD_GIMBAL_CTRL_STOPE
-   * Stops the pan-tilt movement at any time
-   */
-  public String cmd_gimbal_ctrl_stop() {
-    return "{\"T\":135} ";
-  }
-
-  /*
-   * delta_pan: -1 -> step left, 0 -> none, 1 -> step right
-   * delta_tilt: -1 -> step down, 0 -> none, 1 -> step up
-   */
-  public String gimbal_step(int delta_pan, int delta_tilt) {
-    int new_pan = actPan;
-    int new_tilt = actTilt;
-    if (delta_pan < 0) {
-      if (actPan > -180) {
-        new_pan = actPan - 2;
-      }
-    } else if (delta_pan > 0) {
-      if (actPan < 180) {
-        new_pan = actPan + 2;
-      }
-    }
-    if (delta_tilt < 0) {
-      if (actTilt > -30) {
-        new_tilt = actTilt - 2;
-      }
-    } else if (delta_tilt > 0) {
-      if (actTilt < 90) {
-        new_tilt = actTilt + 2;
-      }
-    }
-    return cmd_gimbal_ctrl_simple(new_pan, new_tilt);
+  public void gimbal_step(int delta_pan, int delta_tilt) {
+    String cmd = "{\"pan\":" + delta_pan + ",\"tilt\":" + delta_tilt + "}";
+    jetson.post(GIMBAL_STEP_PATH, cmd);
   }
 
   /*
    *  CMD_LED_CTRL
    *  IO1: chassis front led left and right
    */
-  public String ctrl_chassis_led(int brightness) {
+  public void ctrl_chassis_led(int brightness) {
     if (brightness < 0) {
       brightness = 0;
     } else if (brightness > 255) {
@@ -184,14 +155,15 @@ public class CobraFlexClient {
     if (brightness != actualChassisLight) {
       actualChassisLight = brightness;
     }
-    return "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
+    String cmd =  "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
+    jetson.post(CMD_PATH, cmd);
   }
 
   /*
    *  CMD_LED_CTRL
    *  IO2: gimbal led
    */
-  public String ctrl_gimbal_led(int brightness) {
+  public void ctrl_gimbal_led(int brightness) {
     if (brightness < 0) {
       brightness = 0;
     } else if (brightness > 255) {
@@ -200,6 +172,7 @@ public class CobraFlexClient {
     if (brightness != actualGimbalLight) {
       actualGimbalLight = brightness;
     }
-    return "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
+    String cmd = "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
+    jetson.post(CMD_PATH, cmd);
   }
 }

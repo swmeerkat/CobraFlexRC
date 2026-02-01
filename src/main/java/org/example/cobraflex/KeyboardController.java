@@ -4,7 +4,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.example.cobraflex.clients.CobraFlexClient;
-import org.example.cobraflex.clients.JetsonOrinNanoClient;
 import org.example.cobraflex.clients.MovingDirection;
 
 /*
@@ -20,58 +19,45 @@ import org.example.cobraflex.clients.MovingDirection;
 @Slf4j
 public class KeyboardController {
 
-  private final JetsonOrinNanoClient jetson;
   private final CobraFlexClient cobraflex;
   private boolean optionKeyPressed = false;
-  private static final String CMD_PATH = "/cobraflex/cmd";
 
-  public KeyboardController(JetsonOrinNanoClient jetson, CobraFlexClient cobraflex) {
-    this.jetson = jetson;
+  public KeyboardController(CobraFlexClient cobraflex) {
     this.cobraflex = cobraflex;
   }
 
   public void keyPressed(KeyEvent e) {
-    String cmd = "{}";
     switch (e.getCode()) {
       case KeyCode.SHIFT -> optionKeyPressed = true;
       case KeyCode.H -> {
         if (optionKeyPressed) {
-          cmd = cobraflex.gimbal_step(-1, 0);
+          cobraflex.gimbal_step(-100, 0);
         } else {
-          cmd = cobraflex.cmd_speed_control(MovingDirection.WEST);
+          cobraflex.cmd_speed_control(MovingDirection.WEST);
         }
-        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.J -> {
         if (optionKeyPressed) {
-          cmd = cobraflex.gimbal_step(0, 1);
+          cobraflex.gimbal_step(0, -100);
         } else {
-          cmd = cobraflex.cmd_speed_control(MovingDirection.NORTH);
+          cobraflex.cmd_speed_control(MovingDirection.NORTH);
         }
-        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.K -> {
         if (optionKeyPressed) {
-          cmd = cobraflex.gimbal_step(0, -1);
+          cobraflex.gimbal_step(0, 100);
         } else {
-          cmd = cobraflex.cmd_speed_control(MovingDirection.SOUTH);
+          cobraflex.cmd_speed_control(MovingDirection.SOUTH);
         }
-        jetson.post(CMD_PATH, cmd);
       }
       case KeyCode.L -> {
         if (optionKeyPressed) {
-          cmd = cobraflex.gimbal_step(1, 0);
+          cobraflex.gimbal_step(100, 0);
         } else {
-          cmd = cobraflex.cmd_speed_control(MovingDirection.EAST);
+          cobraflex.cmd_speed_control(MovingDirection.EAST);
         }
-        jetson.post(CMD_PATH, cmd);
       }
-      case KeyCode.SPACE -> {
-        cobraflex.cmd_speed_control(MovingDirection.STOP);
-        jetson.post(CMD_PATH, cmd);
-        cobraflex.cmd_gimbal_ctrl_stop();
-        jetson.post(CMD_PATH, cmd);
-      }
+      case KeyCode.SPACE -> cobraflex.cmd_speed_control(MovingDirection.STOP);
       default -> log.info("unexpected key pressed: char={} code={}, ignored",
           e.getText(), e.getCode());
     }
@@ -81,8 +67,7 @@ public class KeyboardController {
     if (e.getCode() == KeyCode.SHIFT) {
       optionKeyPressed = false;
     } else {
-      String cmd = cobraflex.cmd_speed_control(MovingDirection.STOP);
-      jetson.post(CMD_PATH, cmd);
+      cobraflex.cmd_speed_control(MovingDirection.STOP);
     }
   }
 }
