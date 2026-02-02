@@ -228,7 +228,7 @@ public class UiController {
       } catch (InterruptedException e) {
         log.error(e.getMessage());
       }
-      i += 100;
+      i += 200;
     }
     cobraflex.setSpeedLevel(speedLevel);
     chassisTimer = new Timer();
