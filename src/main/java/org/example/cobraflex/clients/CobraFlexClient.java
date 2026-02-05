@@ -19,6 +19,7 @@ public class CobraFlexClient {
 
   @Getter
   private final int DEFAULT_SPEED = 900;
+  private final JetsonOrinNanoClient jetson;
   @Getter
   private int speedLevel;
   @Setter
@@ -27,8 +28,6 @@ public class CobraFlexClient {
   @Setter
   @Getter
   private int actTilt;
-
-  private final JetsonOrinNanoClient jetson;
   private int actualChassisLight = 0;
   private int actualGimbalLight = 0;
 
@@ -155,7 +154,7 @@ public class CobraFlexClient {
     if (brightness != actualChassisLight) {
       actualChassisLight = brightness;
     }
-    String cmd =  "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
+    String cmd = "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
     jetson.post(CMD_PATH, cmd);
   }
 
