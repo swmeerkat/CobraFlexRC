@@ -211,7 +211,6 @@ public class UiController {
     if (gimbalTimer != null) {
       gimbalTimer.cancel();
     }
-    getFeedback();
   }
 
   private void repeat_chassis_cmd(MovingDirection direction) {
