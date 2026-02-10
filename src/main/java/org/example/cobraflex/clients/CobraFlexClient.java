@@ -178,7 +178,6 @@ public class CobraFlexClient {
   }
 
   public void switch_gimbal_camera(boolean camera_on) {
-    System.out.println("switch_gimbal_camera + " + camera_on);
     if (camera_on) {
       gimbal_cam_pid = jetson.post(GIMBAL_CAMERA_PATH + "/on", "{}").toString();
     } else {
