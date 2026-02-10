@@ -82,6 +82,11 @@ Label {
   -fx-background-color: #44ddff;
 }
 
+.toggle-button {
+  -fx-background-color: #777777;
+  -fx-text-fill: white;
+}
+
 #console {
   -fx-min-height: 300;
   -fx-min-width: 600;

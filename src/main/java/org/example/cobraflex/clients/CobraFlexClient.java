@@ -16,6 +16,7 @@ public class CobraFlexClient {
   private static final String CMD_PATH = "/cobraflex/cmd";
   private static final String GIMBAL_STEP_PATH = "/gimbal/step";
   private static final String GIMBAL_MIDDLE_POS_PATH = "/gimbal/middle_position";
+  private static final String GIMBAL_CAMERA_PATH = "/gimbal/camera";
 
   @Getter
   private final int DEFAULT_SPEED = 900;
@@ -30,6 +31,7 @@ public class CobraFlexClient {
   private int actTilt;
   private int actualChassisLight = 0;
   private int actualGimbalLight = 0;
+  private String gimbal_cam_pid = null;
 
 
   public CobraFlexClient() {
@@ -173,5 +175,14 @@ public class CobraFlexClient {
     }
     String cmd = "{\"T\":132, \"IO1\":" + actualChassisLight + ",\"IO2\": " + actualGimbalLight + "}";
     jetson.post(CMD_PATH, cmd);
+  }
+
+  public void switch_gimbal_camera(boolean camera_on) {
+    System.out.println("switch_gimbal_camera + " + camera_on);
+    if (camera_on) {
+      gimbal_cam_pid = jetson.post(GIMBAL_CAMERA_PATH + "/on", "{}").toString();
+    } else {
+      jetson.post(GIMBAL_CAMERA_PATH + "/off", gimbal_cam_pid);
+    }
   }
 }

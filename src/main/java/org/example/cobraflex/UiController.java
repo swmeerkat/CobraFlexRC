@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
@@ -23,6 +24,8 @@ public class UiController {
   public Slider gimbal_light;
   @FXML
   public Slider chassis_speed;
+  @FXML
+  public RadioButton gimbal_cam;
   @FXML
   public TextArea console;
 
@@ -191,6 +194,11 @@ public class UiController {
   @FXML
   public void enterKeyboardControl() {
     // focus on button is sufficient
+  }
+
+  @FXML
+  public void gimbal_camera_switched() {
+    cobraflex.switch_gimbal_camera(gimbal_cam.isSelected());
   }
 
   private void repeat_gimbal_cmd(int delta_pan, int delta_tilt) {

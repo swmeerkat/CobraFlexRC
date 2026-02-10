@@ -90,5 +90,6 @@
       onKeyReleased="#keyReleased"/>
     <Button text="Keyboard control" onAction="#enterKeyboardControl" onKeyPressed="#keyPressed"
       onKeyReleased="#keyReleased"/>
+    <RadioButton styleClass="toggle-button" fx:id="gimbal_cam" text="Gimbal camera" onAction="#gimbal_camera_switched"/>
   </HBox>
 </VBox>
