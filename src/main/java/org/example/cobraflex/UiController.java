@@ -211,7 +211,7 @@ public class UiController {
       public void run() {
         cobraflex.gimbal_step(delta_pan, delta_tilt);
       }
-    }, 0, 100);
+    }, 0, 20);
   }
 
   @FXML
