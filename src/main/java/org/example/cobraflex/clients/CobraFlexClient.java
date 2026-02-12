@@ -19,7 +19,7 @@ public class CobraFlexClient {
   private static final String GIMBAL_CAMERA_PATH = "/gimbal/camera";
 
   @Getter
-  private final int DEFAULT_SPEED = 900;
+  private final int DEFAULT_SPEED = 500;
   private final JetsonOrinNanoClient jetson;
   @Getter
   private int speedLevel;
