@@ -69,64 +69,45 @@ public class CobraFlexClient {
    *  - L, R: speed of the wheel, value range 0.5 - -0.5
    */
   public void cmd_speed_control(MovingDirection direction) {
-    int leftF = 0;
-    int rightF = 0;
-    int leftR = 0;
-    int rightR = 0;
+    int left = 0;
+    int right = 0;
     switch (direction) {
       case NORTH -> {
-        leftF = speedLevel;
-        rightF = speedLevel;
-        leftR = speedLevel;
-        rightR = speedLevel;
+        left = speedLevel;
+        right = speedLevel;
       }
       case NORTHEAST -> {
-        leftF = speedLevel;
-        rightF = speedLevel / 3;
-        leftR = speedLevel;
-        rightR = speedLevel / 3;
+        left = speedLevel;
+        right = speedLevel / 3;
       }
       case EAST -> {
-        leftF = speedLevel;
-        rightF = -speedLevel;
-        leftR = speedLevel;
-        rightR = -speedLevel;
+        left = speedLevel;
+        right = -speedLevel;
       }
       case SOUTHEAST -> {
-        leftF = -speedLevel;
-        rightF = -speedLevel / 3;
-        leftR = -speedLevel;
-        rightR = -speedLevel / 3;
+        left = -speedLevel;
+        right = -speedLevel / 3;
       }
       case SOUTH -> {
-        leftF = -speedLevel;
-        rightF = -speedLevel;
-        leftR = -speedLevel;
-        rightR = -speedLevel;
+        left = -speedLevel;
+        right = -speedLevel;
       }
       case SOUTHWEST -> {
-        leftF = -speedLevel / 3;
-        rightF = -speedLevel;
-        leftR = -speedLevel / 3;
-        rightR = -speedLevel;
+        left = -speedLevel / 3;
+        right = -speedLevel;
       }
       case WEST -> {
-        leftF = -speedLevel;
-        rightF = speedLevel;
-        leftR = -speedLevel;
-        rightR = speedLevel;
+        left = -speedLevel;
+        right = speedLevel;
       }
       case NORTHWEST -> {
-        leftF = speedLevel / 3;
-        rightF = speedLevel;
-        leftR = speedLevel / 3;
-        rightR = speedLevel;
+        left = speedLevel / 3;
+        right = speedLevel;
       }
       case STOP -> {
       }
     }
-    String cmd = "{\"T\":11,\"M1\":" + leftF + ",\"M2\":" + rightF + ",\"M3\":" + rightR + ",\"M4\":"
-        + leftR + "}";
+    String cmd = "{\"T\":1,\"L\":" + left + ",\"R\":" + right + "}";
     jetson.post(CMD_PATH, cmd);
   }
 
