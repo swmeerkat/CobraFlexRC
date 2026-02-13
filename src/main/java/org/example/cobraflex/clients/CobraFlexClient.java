@@ -53,8 +53,8 @@ public class CobraFlexClient {
    * * Output:
    *  - M1: speed of the left front wheel
    *  - M2: speed of the right front wheel
-   *  - M3: speed of the left rear wheel
-   *  - M4: speed of the right rear wheel
+   *  - M3: speed of the right rear wheel
+   *  - M4: speed of the left rear wheel
    *  - odl: mileage of the left wheel in cm after last start of the chassis
    *  - odr: mileage of the right wheel in cm after the last start of the chassis
    *  - v: voltage in mV
@@ -107,7 +107,7 @@ public class CobraFlexClient {
       case STOP -> {
       }
     }
-    String cmd = "{\"T\":1,\"L\":" + left + ",\"R\":" + right + "}";
+    String cmd = "{\"T\":11,\"M1\":" + left + ",\"M2\":" + right + ",\"M3\":" + right + ",\"M4\":" + left + "}";
     jetson.post(CMD_PATH, cmd);
   }
 
