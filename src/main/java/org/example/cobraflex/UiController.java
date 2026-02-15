@@ -231,7 +231,7 @@ public class UiController {
       cobraflex.setSpeedLevel(i);
       cobraflex.cmd_speed_control(direction);
       try {
-        Thread.sleep(50);
+        Thread.sleep(20);
       } catch (InterruptedException e) {
         log.error(e.getMessage());
       }
