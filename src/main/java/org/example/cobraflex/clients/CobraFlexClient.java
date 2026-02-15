@@ -66,49 +66,67 @@ public class CobraFlexClient {
   /*
    * CMD_SPEED_CTRL
    * Input:
-   *  - L, R: speed of the wheel, value range 0.5 - -0.5
+   *  - L, R: speed of the wheel, value range 0 - 1800 rpm
    */
   public void cmd_speed_control(MovingDirection direction) {
-    int left = 0;
-    int right = 0;
-    int reducedSpeed = speedLevel - (speedLevel / 3);
+    int frontLeft = 0;     // M1
+    int frontRight = 0;    // M2
+    int rearRight = 0;     // M3
+    int rearLeft = 0;      // M4
+    int reducedSpeed = speedLevel / 2;
     switch (direction) {
       case NORTH -> {
-        left = speedLevel;
-        right = speedLevel;
+        frontLeft = speedLevel;
+        frontRight = speedLevel;
+        rearRight = speedLevel;
+        rearLeft = speedLevel;
       }
       case NORTHEAST -> {
-        left = speedLevel;
-        right = reducedSpeed;
+        frontLeft = speedLevel;
+        frontRight = reducedSpeed;
+        rearRight = reducedSpeed;
+        rearLeft = speedLevel;
       }
       case EAST -> {
-        left = speedLevel;
-        right = -speedLevel;
+        frontLeft = speedLevel;
+        frontRight = -speedLevel;
+        rearRight = -speedLevel;
+        rearLeft = speedLevel;
       }
       case SOUTHEAST -> {
-        left = -speedLevel;
-        right = -reducedSpeed;
+        frontLeft = -speedLevel;
+        frontRight = -reducedSpeed;
+        rearRight = -reducedSpeed;
+        rearLeft = -speedLevel;
       }
       case SOUTH -> {
-        left = -speedLevel;
-        right = -speedLevel;
+        frontLeft = -speedLevel;
+        frontRight = -speedLevel;
+        rearRight = -speedLevel;
+        rearLeft = -speedLevel;
       }
       case SOUTHWEST -> {
-        left = -reducedSpeed;
-        right = -speedLevel;
+        frontLeft = -reducedSpeed;
+        frontRight = -speedLevel;
+        rearRight = -speedLevel;
+        rearLeft = -reducedSpeed;
       }
       case WEST -> {
-        left = -speedLevel;
-        right = speedLevel;
+        frontLeft = -speedLevel;
+        frontRight = speedLevel;
+        rearRight = speedLevel;
+        rearLeft = -speedLevel;
       }
       case NORTHWEST -> {
-        left = reducedSpeed;
-        right = speedLevel;
+        frontLeft = reducedSpeed;
+        frontRight = speedLevel;
+        rearRight = speedLevel;
+        rearLeft = reducedSpeed;
       }
       case STOP -> {
       }
     }
-    String cmd = "{\"T\":11,\"M1\":" + left + ",\"M2\":" + right + ",\"M3\":" + right + ",\"M4\":" + left + "}";
+    String cmd = "{\"T\":11,\"M1\":" + frontLeft + ",\"M2\":" + frontRight + ",\"M3\":" + rearRight + ",\"M4\":" + rearLeft + "}";
     jetson.post(CMD_PATH, cmd);
   }
 
