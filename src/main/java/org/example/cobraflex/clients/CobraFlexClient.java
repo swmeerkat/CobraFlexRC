@@ -71,6 +71,7 @@ public class CobraFlexClient {
   public void cmd_speed_control(MovingDirection direction) {
     int left = 0;
     int right = 0;
+    int reducedSpeed = speedLevel / 2;
     switch (direction) {
       case NORTH -> {
         left = speedLevel;
@@ -78,7 +79,7 @@ public class CobraFlexClient {
       }
       case NORTHEAST -> {
         left = speedLevel;
-        right = speedLevel / 3;
+        right = reducedSpeed;
       }
       case EAST -> {
         left = speedLevel;
@@ -86,14 +87,14 @@ public class CobraFlexClient {
       }
       case SOUTHEAST -> {
         left = -speedLevel;
-        right = -speedLevel / 3;
+        right = -reducedSpeed;
       }
       case SOUTH -> {
         left = -speedLevel;
         right = -speedLevel;
       }
       case SOUTHWEST -> {
-        left = -speedLevel / 3;
+        left = -reducedSpeed;
         right = -speedLevel;
       }
       case WEST -> {
@@ -101,7 +102,7 @@ public class CobraFlexClient {
         right = speedLevel;
       }
       case NORTHWEST -> {
-        left = speedLevel / 3;
+        left = reducedSpeed;
         right = speedLevel;
       }
       case STOP -> {

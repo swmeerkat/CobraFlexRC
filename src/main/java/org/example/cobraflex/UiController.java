@@ -231,7 +231,7 @@ public class UiController {
       public void run() {
         cobraflex.cmd_speed_control(direction);
       }
-    }, 0, 2000);
+    }, 0, 500);
   }
 
   @FXML
