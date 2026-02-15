@@ -19,7 +19,7 @@ public class CobraFlexClient {
   private static final String GIMBAL_CAMERA_PATH = "/gimbal/camera";
 
   @Getter
-  private final int DEFAULT_SPEED = 500;
+  private final int DEFAULT_SPEED = 600;
   private final JetsonOrinNanoClient jetson;
   @Getter
   private int speedLevel;
@@ -71,7 +71,7 @@ public class CobraFlexClient {
   public void cmd_speed_control(MovingDirection direction) {
     int left = 0;
     int right = 0;
-    int reducedSpeed = speedLevel / 2;
+    int reducedSpeed = speedLevel - (speedLevel / 3);
     switch (direction) {
       case NORTH -> {
         left = speedLevel;

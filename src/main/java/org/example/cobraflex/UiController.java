@@ -225,6 +225,19 @@ public class UiController {
     if (chassisTimer != null) {
       chassisTimer.cancel();
     }
+    int last_speedLevel = cobraflex.getSpeedLevel();
+    int i = 200;
+    while (i < last_speedLevel) {
+      cobraflex.setSpeedLevel(i);
+      cobraflex.cmd_speed_control(direction);
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException e) {
+        log.error(e.getMessage());
+      }
+      i += 100;
+    }
+    cobraflex.setSpeedLevel(last_speedLevel);
     chassisTimer = new Timer();
     chassisTimer.scheduleAtFixedRate(new TimerTask() {
       @Override
@@ -247,7 +260,7 @@ public class UiController {
         cobraflex.setSpeedLevel(i);
         cobraflex.cmd_speed_control(currentDirection);
         try {
-          Thread.sleep(10);
+          Thread.sleep(20);
         } catch (InterruptedException e) {
           log.error(e.getMessage());
         }
